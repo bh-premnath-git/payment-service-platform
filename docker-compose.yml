@@ -1,4 +1,6 @@
 x-svc-env: &svc_env
+  env_file:
+    - .env
 
 x-extra-hosts: &extra_hosts
   - "host.docker.internal:host-gateway"
@@ -39,6 +41,7 @@ networks:
 
 services:
   mysql:
+    <<: *svc_env
     image: ${MYSQL_IMAGE}
     ports:
       - "${MYSQL_PORT}:3306"
@@ -47,6 +50,8 @@ services:
     volumes:
       - ./conf/mysql/scripts:/docker-entrypoint-initdb.d
       - ./conf/mysql/conf/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
+    networks:
+      - edge
     ulimits:
       nofile:
         soft: 20000
@@ -60,6 +65,8 @@ services:
       start_period: 80s
 
   is-as-km:
+    <<: *support_deploy
+    <<: *svc_env
     build:
       context: ./dockerfiles/is-as-km
       args:
@@ -76,8 +83,12 @@ services:
       - ./conf/is-as-km:/home/wso2carbon/wso2-config-volume
     ports:
       - "${ISKM_HTTPS_PORT}:9444"
+    networks:
+      - edge
 
   api-manager:
+    <<: *support_deploy
+    <<: *svc_env
     build:
       context: ./dockerfiles/apim
       args:
@@ -98,3 +109,5 @@ services:
       - "${APIM_HTTPS_PORT}:9443"
       - "${APIM_GATEWAY_HTTP_PORT}:8280"
       - "${APIM_GATEWAY_HTTPS_PORT}:8243"
+    networks:
+      - edge
