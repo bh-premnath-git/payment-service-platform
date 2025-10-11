@@ -3135,7 +3135,25 @@ create index IDX_AS_AITIAI on AM_SUBSCRIPTION (API_ID,TIER_ID,APPLICATION_ID);
 create index IDX_APA_QT on AM_POLICY_APPLICATION (QUOTA_TYPE);
 create index IDX_AA_AT_CB on AM_APPLICATION (APPLICATION_TIER,CREATED_BY);
 CREATE INDEX IDX_IOAT_TSH_TS on IDN_OAUTH2_ACCESS_TOKEN(TOKEN_SCOPE_HASH, TOKEN_STATE);
-CREATE INDEX IDX_IAT_TI_CK ON IDN_INVALID_TOKENS (TOKEN_IDENTIFIER, CONSUMER_KEY);
+-- Guard the index creation to avoid failures when IDN_INVALID_TOKENS is
+-- not available in the target schema.
+SET @idn_invalid_tokens_exists := (
+    SELECT COUNT(1)
+    FROM information_schema.tables
+    WHERE table_schema = 'WSO2AM_DB'
+      AND table_name = 'IDN_INVALID_TOKENS'
+);
+SET @create_idx_idn_invalid_tokens := IF(
+    @idn_invalid_tokens_exists > 0,
+    'CREATE INDEX IDX_IAT_TI_CK ON IDN_INVALID_TOKENS (TOKEN_IDENTIFIER, CONSUMER_KEY)',
+    'SELECT "Skipping IDX_IAT_TI_CK creation as IDN_INVALID_TOKENS table is missing"'
+);
+PREPARE stmt FROM @create_idx_idn_invalid_tokens;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @create_idx_idn_invalid_tokens := NULL;
+SET @idn_invalid_tokens_exists := NULL;
 CREATE INDEX IDX_GW_REV_DEPLOY_STATUS ON AM_GW_REVISION_DEPLOYMENT (STATUS, ACTION);
 
 -- Performance indexes end--
