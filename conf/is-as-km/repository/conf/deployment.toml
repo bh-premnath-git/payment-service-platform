@@ -79,7 +79,7 @@ app_password= "dashboard"
 id = "token_revocation"
 type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
 name = "org.wso2.is.notification.ApimOauthEventInterceptor"
-order = 1
+order = "1"
 enable = true
 
 [event_listener.properties]
