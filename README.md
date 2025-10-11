@@ -109,6 +109,9 @@ definitions if you want to enable TLS for their endpoints.
 - If the WSO2 containers fail to start, check the logs with `docker compose logs api-manager is-as-km` to confirm that the MySQL database initialization scripts finished executing. The `mysql` health check waits for the `initialization-complete.flag` file before marking the service as healthy.
 - For additional customization, update the configuration templates in `conf/is-as-km/repository/resources/conf/templates` and re-run the stack.
 - If the Identity Server log reports an error similar to `Resource type with the name: CERTIFICATE_VALIDATOR does not exists`, drop the MySQL volume (or delete the schema) and restart the stack so that the [configuration management DDL](conf/mysql/scripts/mysql_apim.sql) runs. This inserts the required `CERTIFICATE_VALIDATOR` resource type for the X.509 certificate validator.
+- See [MySQL volume and port troubleshooting](docs/troubleshooting/mysql-volume-and-port-errors.md) for guidance on resolving Docker volume errors and missing `33060/tcp` port mappings reported by automation scripts.
+
+
 
 ## License
 
