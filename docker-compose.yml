@@ -65,8 +65,7 @@ services:
       start_period: 80s
 
   is-as-km:
-    <<: *support_deploy
-    <<: *svc_env
+    <<: [*support_deploy, *svc_env]
     build:
       context: ./dockerfiles/is-as-km
       args:
@@ -87,8 +86,7 @@ services:
       - edge
 
   api-manager:
-    <<: *support_deploy
-    <<: *svc_env
+    <<: [*support_deploy, *svc_env]
     build:
       context: ./dockerfiles/apim
       args:
