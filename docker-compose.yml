@@ -100,6 +100,7 @@ services:
       context: ./dockerfiles/is-as-km
       args:
         MYSQL_CONNECTOR_VERSION: ${MYSQL_CONNECTOR_VERSION}
+    command: ["/home/wso2carbon/setup-and-start.sh"]
     healthcheck:
       test: ["CMD", "curl", "--fail", "https://localhost:9444/api/health-check/v1.0/health"]
       interval: 10s
@@ -124,6 +125,7 @@ services:
       context: ./dockerfiles/apim
       args:
         MYSQL_CONNECTOR_VERSION: ${MYSQL_CONNECTOR_VERSION}
+    command: ["/home/wso2carbon/setup-and-start.sh"]
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:9763/services/Version"]
       interval: 10s

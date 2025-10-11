@@ -1,0 +1,173 @@
+{
+    "create": {
+        "form": {
+            "fields": [
+                {
+                    "id": "application-name",
+                    "aria-label": "Application Name",
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "My App",
+                    "dataComponentId": "salesforce-create-wizard-application-name",
+                    "handlers": [
+                        {
+                            "name": "uniqueApplicationName",
+                            "type": "initialize"
+                        },
+                        {
+                            "name": "applicationName",
+                            "type": "validation"
+                        }
+                    ]
+                },
+                {
+                    "id": "issuer",
+                    "aria-label": "Issuer",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.issuer",
+                    "label": "Issuer",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "salesforce-create-wizard-issuer",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "uniqueIDGenerator",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "issuerId"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "access-url",
+                    "aria-label": "Access URL",
+                    "name": "accessUrl",
+                    "label": "Access URL",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "salesforce-create-wizard-access-url",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.issuer"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "tenantDomain"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "serverOrigin"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "image-url",
+                    "aria-label": "Image URL",
+                    "name": "imageUrl",
+                    "label": "Image URL",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "salesforce-create-wizard-image-url",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "clientOrigin"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "appBaseNameWithoutTenant"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "default-assertion-consumer-url",
+                    "ariaLabel": "Default Assertion Consumer URL",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.defaultAssertionConsumerUrl",
+                    "label": "Default Assertion Consumer URL",
+                    "type": "text",
+                    "required": false,
+                    "hidden": true,
+                    "placeholder": "https://orgname.my.salesforce.com?so=rt000067",
+                    "dataComponentId": "salesforce-wizard-form-default-assertion-consumer-url",
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "edit": {
+        "tabs": [
+            {
+                "id": "quick-start",
+                "displayName": "Guide",
+                "contentType": "guide",
+                "guide": "## Configure Salesforce\n***\n***\n***\nFollow the steps below to configure the Salesforce using SAML 2.0 protocol to allow organization users to log in to Salesforce using ${productName}.\n***\n***\n***\n***\n> Ensure your Salesforce edition supports SSO. Check the [Salesforce documentation](https://help.salesforce.com/s/articleView?id=sf.sso_saml_setting_up.htm&type=5).\n<!--rehype:type=info&title=Prerequisites-->\n***\n***\n***\n***\n### Add ${productName} SAML Metadata\n<!--rehype:numbered=true&content=1-->\n***\n***\nDownload SAML Metadata file.    \n***\n***\n[Download Metadata File](${serverOrigin}/t/${tenantDomain}/identity/metadata/saml2)<!--rehype:download=true&fileName=SAML_Metadata&as=button-->\n***\n***   \nLog in to [Salesforce](https://login.salesforce.com/).\n***\n***\n> **Note:** If using a custom domain, access your organization via the  `Use Custom Domain` option on the [Salesforce login](https://login.salesforce.com/) page.\n<!--rehype:type=info&icon=false-->\n***\n***\nNavigate to **Setup** > **Settings** > **Identity** > **Single Sign-On Settings page**. On the Single sign-on settings page, check the `SAML Enabled` box under `Federated Single Sign-On Using SAML` to enable the use of SAML SSO.\n***\n***\nClick on the New From Metadata file button and upload the downloaded SAML metadata file of the ${productName}.\n***\n***\n***\n***\n### Update Required Configurations\n<!--rehype:numbered=true&content=2-->\n***\n***\nIn the SAML settings form replace `Entity ID` with :\n***\n***\n```bash\n${protocol.saml.issuer}\n```\n***\n***\nChoose the same certificate for `Assertion Decryption Certificate` and `Request Signing Certificate`. Add your Salesforce organization’s URL in `Custom Logout URL`, and click the `Save`.\n\n***\n***\n***\n***\n### Configure Salesforce Login URL, Logout URL, and Certificate\n<!--rehype:numbered=true&content=3-->\n***\n***\nScroll to the Endpoints section and copy the Login and Logout URLs. Download the Request Signing Certificate.\n***\n***\nNavigate to the [Protocol](#tab=protocol)<!--rehype:external=false-->, paste the **Assertion consumer service URL** and **Logout URL** into their respective fields and upload the certificate..\n***\n***\n***\n***\n### Try out SSO\n<!--rehype:numbered=true&content=4-->\n***\n***\nAdd login options to your Salesforce login page following [Salesforce guide](https://help.salesforce.com/s/articleView?id=sf.sso_sp_test_connection.htm&type=5).\n***\n***\n> To test the SSO, [create a user](/users)<!--rehype:external=false--> with the same email address as their Salesforce username. You can change this behavior from the [User Attributes](#tab=user-attributes)<!--rehype:external=false--> section.\n<!--rehype:type=warning-->"
+            },
+            {
+                "id": "general",
+                "hiddenComponents": [
+                    "application-edit-general-details-form-image-url"
+                ]
+            },
+            {
+                "id": "protocol",
+                "displayName": "Protocol",
+                "hiddenComponents": [
+                    "application-edit-inbound-saml-form-issuer",
+                    "application-edit-inbound-saml-form-application-qualifier",
+                    "application-edit-inbound-saml-form-idp-entity-id-alias",
+                    "application-edit-inbound-saml-form-bindings",
+                    "application-edit-inbound-saml-form-signature-validation-for-artifact-binding",
+                    "application-edit-inbound-saml-form-audience",
+                    "application-edit-inbound-saml-form-recipient",
+                    "application-edit-inbound-saml-form-assertion-query-profile",
+                    "application-edit-inbound-saml-form-attribute-name-format"
+                ]
+            },
+            {
+                "id": "user-attributes",
+                "hiddenComponents": [
+                    "application-edit-user-attributes-linked-accounts",
+                    "application-edit-user-attributes--validate-linked-local-accounts",
+                    "application-edit-user-attributes-include-tenant-domain",
+                    "application-edit-user-attributes-include-user-domain"
+                ]
+            },
+            {
+                "id": "sign-in-method"
+            },
+            {
+                "id": "shared-access"
+            }
+        ],
+        "defaultActiveTabId": "quick-start"
+    }
+}

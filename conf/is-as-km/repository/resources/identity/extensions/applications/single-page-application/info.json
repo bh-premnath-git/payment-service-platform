@@ -1,0 +1,37 @@
+{
+    "id": "single-page-application",
+    "version": "1.0.0",
+    "name": "Single-Page Application",
+    "description": "A web application that runs application logic in the browser.",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/spa-template.svg",
+    "displayOrder": 0,
+    "category": "DEFAULT",
+    "tags": [
+        "Default",
+        "OIDC"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "supportedTechnologies",
+            "value": [
+                {
+                    "displayName": "React",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/react-logo.svg"
+                },
+                {
+                    "displayName": "Angular",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/angular-logo.svg"
+                },
+                {
+                    "displayName": "Vue",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/vue-logo.svg"
+                },
+                {
+                    "displayName": "Javascript",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/javascript-logo.svg"
+                }
+            ]
+        }
+    ]
+}

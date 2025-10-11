@@ -1,0 +1,20 @@
+{
+    "id": "google",
+    "version": "2.0.1",
+    "name": "Google Workspace",
+    "description": "Google Workspace is a collection of cloud computing, productivity and collaboration tools, software and products developed and marketed by Google. It consists of Gmail, Contacts, Calendar, Meet and Chat for communication; Drive for storage; and the Google Docs Editors suite for content creation.",
+    "image": "${CONSOLE_BASE_URL}/resources/connections/assets/images/logos/google.svg",
+    "displayOrder": 1,
+    "tags": [
+        "SAML",
+        "SSO"
+    ],
+    "category": "SSO-INTEGRATION",
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "featureStatus",
+            "value": "new"
+        }
+    ]
+}

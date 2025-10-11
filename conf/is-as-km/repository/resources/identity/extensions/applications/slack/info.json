@@ -1,0 +1,20 @@
+{
+    "id": "slack",
+    "version": "1.0.1",
+    "name": "Slack",
+    "description": "Slack is a cloud-based messaging platform for team communication, offering channels, direct messaging, file sharing, and integrations with productivity tools to streamline collaboration and keep teams connected in real time.",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/slack.png",
+    "displayOrder": 5,
+    "category": "SSO-INTEGRATION",
+    "tags": [
+        "SAML",
+        "SSO"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "featureStatus",
+            "value": "new"
+        }
+    ]
+}

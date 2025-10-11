@@ -1,0 +1,19 @@
+{
+  "id": "firebase-cloud-messaging",
+  "version": "1.0.0",
+  "name": "Firebase Cloud Messaging",
+  "description": "Push Notification Service by Firebase.",
+  "image": "${CONSOLE_BASE_URL}/resources/notification-providers/assets/images/illustrations/push.svg",
+  "displayOrder": 0,
+  "tags": [
+    "Push Notification"
+  ],
+  "category": "PUSH",
+  "type": "notification-providers",
+  "customAttributes": [
+    {
+      "key": "featureStatus",
+      "value": "new"
+    }
+  ]
+}

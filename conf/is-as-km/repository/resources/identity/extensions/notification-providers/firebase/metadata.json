@@ -1,0 +1,29 @@
+{
+  "edit": {
+    "form": {
+      "fields": [
+        {
+          "id": "service-account",
+          "aria-label": "Service Account",
+          "name": "serviceAccountContent",
+          "label": "Service Account File",
+          "type": "file",
+          "required": true,
+          "dataComponentId": "firebase-edit-wizard-service-account",
+          "handlers": [
+            {
+              "name": "fileUpload",
+              "type": "submission"
+            }
+          ],
+          "hidePasteOption": true,
+          "fileType": "json",
+          "dropzoneText": "Drag & Drop the service account file here.",
+          "uploadButtonText": "Upload file",
+          "showFileAsList": true,
+          "fileDisplayName": "service-account.json"
+        }
+      ]
+    }
+  }
+}

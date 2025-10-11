@@ -29,3 +29,6 @@ ARG MYSQL_CONNECTOR_ARTIFACT=mysql-connector-j
 
 # add MySQL JDBC connector to server home as a third party library
 ADD --chown=wso2carbon:wso2 https://repo1.maven.org/maven2/${MYSQL_CONNECTOR_GROUP_PATH}/${MYSQL_CONNECTOR_ARTIFACT}/${MYSQL_CONNECTOR_VERSION}/${MYSQL_CONNECTOR_ARTIFACT}-${MYSQL_CONNECTOR_VERSION}.jar ${WSO2_SERVER_HOME}/repository/components/dropins/
+
+COPY setup-and-start.sh /home/wso2carbon/setup-and-start.sh
+RUN chmod +x /home/wso2carbon/setup-and-start.sh

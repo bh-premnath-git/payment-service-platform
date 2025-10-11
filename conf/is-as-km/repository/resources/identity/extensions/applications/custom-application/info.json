@@ -1,0 +1,35 @@
+{
+    "id": "custom-application",
+    "name": "Standard-Based Application",
+    "version": "1.0.0",
+    "description": "Applications built using standard protocols.",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/standard-based-template.svg",
+    "displayOrder": 3,
+    "category": "DEFAULT",
+    "tags": [
+        "Default",
+        "OIDC",
+        "SAML",
+        "WS-Federation"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "supportedTechnologies",
+            "value": [
+                {
+                    "displayName": "OIDC",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/openid-connect.png"
+                },
+                {
+                    "displayName": "SAML",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/saml.png"
+                },
+                {
+                    "displayName": "WS-Federation",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/ws-fed.png"
+                }
+            ]
+        }
+    ]
+}

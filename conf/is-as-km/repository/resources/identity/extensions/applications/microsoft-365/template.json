@@ -1,0 +1,68 @@
+{
+    "payload": {
+        "name": "Microsoft 365",
+        "advancedConfigurations": {
+            "discoverableByEndUsers": true,
+            "skipLogoutConsent": true
+        },
+        "imageUrl": "${clientOrigin}/${appBaseNameWithoutTenant}/resources/connections/assets/images/logos/microsoft.svg",
+        "accessUrl": "${serverOrigin}/t/${tenantDomain}/samlsso?spEntityID=${inboundProtocolConfiguration.saml.manualConfiguration.issuer}",
+        "authenticationSequence": {
+            "type": "DEFAULT",
+            "steps": [
+                {
+                    "id": 1,
+                    "options": [
+                        {
+                            "idp": "LOCAL",
+                            "authenticator": "basic"
+                        }
+                    ]
+                }
+            ]
+        },
+        "inboundProtocolConfiguration": {
+            "saml": {
+                "manualConfiguration": {
+                    "issuer": "urn:federation:MicrosoftOnline",
+                    "assertionConsumerUrls": [
+                        "https://login.microsoftonline.com/login.srf"
+                    ],
+                    "defaultAssertionConsumerUrl": "${inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]}",
+                    "responseSigning": {
+                        "enabled": true,
+                        "signingAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+                    },
+                    "singleSignOnProfile": {
+                        "enableIdpInitiatedSingleSignOn": true,
+                        "assertion": {
+                            "nameIdFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+                            "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
+                            "encryption": {
+                                "enabled": false,
+                                "assertionEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+                                "keyEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+                            }
+                        },
+                        "bindings": [
+                            "HTTP_REDIRECT",
+                            "HTTP_POST"
+                        ]
+                    },
+                    "attributeProfile": {
+                        "enabled": true,
+                        "alwaysIncludeAttributesInResponse": true
+                    },
+                    "singleLogoutProfile": {
+                        "enabled": true,
+                        "logoutResponseUrl": "",
+                        "logoutMethod": "FRONTCHANNEL_HTTP_REDIRECT"
+                    },
+                    "requestValidation": {
+                        "enableSignatureValidation": false
+                    }
+                }
+            }
+        }
+    }
+}

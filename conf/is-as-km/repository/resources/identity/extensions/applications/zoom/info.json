@@ -1,0 +1,20 @@
+{
+    "id": "zoom",
+    "version": "1.0.1",
+    "name": "Zoom",
+    "description": "Zoom is a cloud-based platform for video communication and collaboration, offering tools like Zoom Meetings for video calls, Zoom Chat for messaging, and Zoom Webinars for virtual events.",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/zoom.svg",
+    "displayOrder": 4,
+    "category": "SSO-INTEGRATION",
+    "tags": [
+        "SAML",
+        "SSO"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "featureStatus",
+            "value": "new"
+        }
+    ]
+}
