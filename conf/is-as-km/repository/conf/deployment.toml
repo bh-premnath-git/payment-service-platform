@@ -31,15 +31,7 @@ driver = "com.mysql.cj.jdbc.Driver"
 [database.user]
 name = "WSO2UM_DB"
 type = "mysql"
-url = "jdbc:mysql://mysql:3306/WSO2IS_UM_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false"
-username = "wso2carbon"
-password = "wso2carbon"
-driver = "com.mysql.cj.jdbc.Driver"
-
-[database.config]
-name = "WSO2CONFIG_DB"
-type = "mysql"
-url = "jdbc:mysql://mysql:3306/WSO2IS_CONFIG_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false"
+url = "jdbc:mysql://mysql:3306/WSO2IS_UM_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;serverTimezone=UTC"
 username = "wso2carbon"
 password = "wso2carbon"
 driver = "com.mysql.cj.jdbc.Driver"
@@ -48,7 +40,8 @@ driver = "com.mysql.cj.jdbc.Driver"
 data_source = "WSO2UM_DB"
 
 [user_store.properties]
-data_source = "WSO2UM_DB"
+# Empty the data source override so the server uses the [database.user] connection
+data_source = ""
 
 [identity_gov.identity_data_store]
 store_class_name = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"

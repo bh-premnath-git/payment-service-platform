@@ -92,6 +92,61 @@ cascadingly, so resolving the datasource mapping fixes the downstream errors (e.
 Restart Identity Server after completing the steps. The `DefaultRealm` and `User Manager Core` errors should no longer appear,
 and OAuth services will activate without further waiting messages.
 
+## User Store Datasource JNDI Lookup Failure
+
+**Log snippet**
+```
+NameNotFoundException: Name [WSO2UM_DB] is not bound in this Context. Unable to find [WSO2UM_DB]
+```
+
+**Cause**
+
+Identity Server is trying to resolve the primary user store datasource via JNDI using the name `WSO2UM_DB`, but no such resource
+is bound. This typically happens when:
+
+- `[database.user]` is missing from `deployment.toml`, so the runtime falls back to JNDI.
+- A JNDI datasource exists but is registered under a different name (e.g., `jdbc/WSO2UM_DB`).
+- `user-mgt.xml` references a datasource name that is not actually bound.
+
+**Fix (pick one approach)**
+
+1. **Configure the datasource directly in TOML (recommended)** – Add the datasource under `[database.user]`. When present, IS
+   uses the TOML definition without attempting JNDI resolution:
+   ```toml
+   [database.user]
+   type = "mysql"
+   url = "jdbc:mysql://<MYSQL_HOST>:3306/WSO2IS_UM_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+   username = "wso2carbon"
+   password = "<DB_PASSWORD>"
+   ```
+   Ensure the schema exists and the integration user can connect:
+   ```sql
+   CREATE DATABASE WSO2IS_UM_DB CHARACTER SET utf8mb4;
+   GRANT ALL PRIVILEGES ON WSO2IS_UM_DB.* TO 'wso2carbon'@'%' IDENTIFIED BY '<DB_PASSWORD>';
+   FLUSH PRIVILEGES;
+   ```
+   Keep `<Property name="dataSource">` empty or matching `WSO2UM_DB` in `repository/conf/user-mgt.xml`; the TOML entry takes
+   precedence.
+2. **Align the JNDI name** – If you prefer JNDI, bind the datasource under the exact name the runtime expects. In
+   `deployment.toml`:
+   ```toml
+   [datasource.WSO2UM_DB]
+   id        = "WSO2UM_DB"
+   url       = "jdbc:mysql://<MYSQL_HOST>:3306/WSO2IS_UM_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+   username  = "wso2carbon"
+   password  = "<DB_PASSWORD>"
+   driver    = "com.mysql.cj.jdbc.Driver"
+   jndi_name = "WSO2UM_DB"
+   ```
+   If `user-mgt.xml` uses a different JNDI name (e.g., `jdbc/WSO2UM_DB`), update both the `jndi_name` here and the
+   `<Property name="dataSource">` entry to match.
+
+Before restarting, run a quick connectivity check to validate credentials and networking:
+```bash
+mysql -h <MYSQL_HOST> -u wso2carbon -p WSO2IS_UM_DB -e "select 1;"
+```
+After the fix, the `User Manager Core` bundle should start cleanly with no further `NameNotFoundException` messages.
+
 ## Missing Baseline Internal Roles
 
 **Log snippets**
