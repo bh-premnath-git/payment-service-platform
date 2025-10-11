@@ -1518,49 +1518,49 @@
         <EventListener id="input_validation"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.input.validation.mgt.listener.InputValidationListener"
-                       orderId="{{event.default_listener.validation.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.validation.priority | default('0')}}"
                        enable="{{event.default_listener.validation.enable}}"/>
         <EventListener id="workflow"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.workflow.userstore.UserStoreActionListener"
-                       orderId="{{event.default_listener.workflow.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.workflow.priority | default('0')}}"
                        enable="{{event.default_listener.workflow.enable}}"/>
         <EventListener id="identity_mgt"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.mgt.IdentityMgtEventListener"
-                       orderId="{{event.default_listener.identity_mgt.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.identity_mgt.priority | default('0')}}"
                        enable="{{event.default_listener.identity_mgt.enable}}"/>
         <!-- Enable the following SCIM 1.1 event listener and disable the SCIM2 event listener if SCIM 1.1 is
         used. -->
         <EventListener id="scim"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.scim.common.listener.SCIMUserOperationListener"
-                       orderId="{{event.default_listener.scim.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.scim.priority | default('0')}}"
                        enable="{{event.default_listener.scim.enable}}"/>
         <EventListener id="scim"
                        type="org.wso2.carbon.stratos.common.listeners.TenantMgtListener"
                        name="org.wso2.carbon.identity.scim.common.listener.SCIMTenantMgtListener"
-                       orderId="{{event.default_listener.scim_tenant_mgt.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.scim_tenant_mgt.priority | default('0')}}"
                        enable="{{event.default_listener.scim_tenant_mgt.enable}}"/>
         <EventListener id="scim2"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.scim2.common.listener.SCIMUserOperationListener"
-                       orderId="{{event.default_listener.scim2.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.scim2.priority | default('0')}}"
                        enable="{{event.default_listener.scim2.enable}}"/>
         <EventListener id="scim2"
                        type="org.wso2.carbon.stratos.common.listeners.TenantMgtListener"
                        name="org.wso2.carbon.identity.scim2.common.listener.SCIMTenantMgtListener"
-                       orderId="{{event.default_listener.scim2_tenant_mgt.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.scim2_tenant_mgt.priority | default('0')}}"
                        enable="{{event.default_listener.scim2_tenant_mgt.enable}}"/>
         <EventListener id="governance_identity_mgt"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.governance.listener.IdentityMgtEventListener"
-                       orderId="{{event.default_listener.governance_identity_mgt.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.governance_identity_mgt.priority | default('0')}}"
                        enable="{{event.default_listener.governance_identity_mgt.enable}}"/>
         <EventListener id="governance_identity_store"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.governance.listener.IdentityStoreEventListener"
-                       orderId="{{event.default_listener.governance_identity_store.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.governance_identity_store.priority | default('0')}}"
                        enable="{{event.default_listener.governance_identity_store.enable}}">
             <Property name="Data.Store">{{event.default_listener.governance_identity_store.data_store}}</Property>
             <!-- By enabling this, it will use the userstore attribute values for identity claims if the identity data
@@ -1570,19 +1570,19 @@
         <EventListener id="application_authentication"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublisherProxy"
-                       orderId="{{event.default_listener.application_authentication.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.application_authentication.priority | default('0')}}"
                        enable="{{event.default_listener.application_authentication.enable}}"/>
         <EventListener id="oauth_listener"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.data.publisher.oauth.listener.OAuthTokenIssuanceLogPublisher"
-                       orderId="{{event.default_listener.oauth_listener.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.oauth_listener.priority | default('0')}}"
                        enable="{{event.default_listener.oauth_listener.enable}}">
             <Property name="Log.Token">false</Property>
         </EventListener>
         <EventListener id="mutual_tls_authenticator"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.MutualTLSClientAuthenticator"
-                       orderId="{{event.default_listener.mutual_tls_authenticator.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.mutual_tls_authenticator.priority | default('0')}}"
                        enable="{{event.default_listener.mutual_tls_authenticator.enable}}">
         </EventListener>
 
@@ -1590,24 +1590,24 @@
         <EventListener id="basic_auth_client_authenticator"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.oauth2.client.authentication.BasicAuthClientAuthenticator"
-                       orderId="{{event.default_listener.basic_auth_client_authenticator.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.basic_auth_client_authenticator.priority | default('0')}}"
                        enable="{{event.default_listener.basic_auth_client_authenticator.enable}}"/>
 
         <!-- Enable this listener to call DeleteEventRecorders. -->
         <EventListener id="user_deletion"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.listeners.UserDeletionEventListener"
-                       orderId="{{event.default_listener.user_deletion.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.user_deletion.priority | default('0')}}"
                        enable="{{event.default_listener.user_deletion.enable}}"/>
         <EventListener id="consent_mgt_handler"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.consent.ConsentMgtPostAuthnHandler"
-                       orderId="{{event.default_listener.consent_mgt_handler.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.consent_mgt_handler.priority | default('0')}}"
                        enable="{{event.default_listener.consent_mgt_handler.enable}}"/>
         <EventListener id="user_session_termination"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.mgt.listener.UserSessionTerminationListener"
-                       orderId="{{event.default_listener.user_session_termination.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.user_session_termination.priority | default('0')}}"
                        enable="{{event.default_listener.user_session_termination.enable}}"/>
 
 
@@ -1615,22 +1615,22 @@
         <EventListener id="jit_provisioning_handler"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.JITProvisioningPostAuthenticationHandler"
-                       orderId="{{event.default_listener.jit_provisioning_handler.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.jit_provisioning_handler.priority | default('0')}}"
                        enable="{{event.default_listener.jit_provisioning_handler.enable}}"/>
         <EventListener id="post_auth_association_handler"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.PostAuthAssociationHandler"
-                       orderId="{{event.default_listener.post_auth_association_handler.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.post_auth_association_handler.priority | default('0')}}"
                        enable="{{event.default_listener.post_auth_association_handler.enable}}"/>
         <EventListener id="subject_identifier_handler"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.PostAuthenticatedSubjectIdentifierHandler"
-                       orderId="{{event.default_listener.subject_identifier_handler.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.subject_identifier_handler.priority | default('0')}}"
                        enable="{{event.default_listener.subject_identifier_handler.enable}}"/>
         <EventListener id="failed_lockout_count_handler"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                        name="org.wso2.carbon.identity.handler.event.account.lock.handlers.PostAuthnFailedLockoutClaimHandler"
-                       orderId="{{event.default_listener.failed_lockout_count_handler.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.failed_lockout_count_handler.priority | default('0')}}"
                        enable="{{event.default_listener.failed_lockout_count_handler.enable}}"/>
 
         <!-- Special UserOperationEventListeners to preserve the backward compatibility with the new unique user ID
@@ -1638,12 +1638,12 @@
                 <EventListener id="username_resolver"
                                type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                                name="org.wso2.carbon.identity.mgt.listener.IdentityUserNameResolverListener"
-                               orderId="{{event.default_listener.username_resolver.priority | default('0', true)}}"
+                               orderId="{{event.default_listener.username_resolver.priority | default('0')}}"
                                enable="{{event.default_listener.username_resolver.enable}}"/>
                 <EventListener id="userid_resolver"
                                type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                                name="org.wso2.carbon.identity.mgt.listener.IdentityUserIdResolverListener"
-                               orderId="{{event.default_listener.userid_resolver.priority | default('0', true)}}"
+                               orderId="{{event.default_listener.userid_resolver.priority | default('0')}}"
                                enable="{{event.default_listener.userid_resolver.enable}}"/>
 
         <!-- Audit Loggers -->
@@ -1652,49 +1652,49 @@
         <EventListener id="user_mgt_audit_logger"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.listeners.UserMgtAuditLogger"
-                       orderId="{{event.default_listener.user_mgt_audit_logger.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.user_mgt_audit_logger.priority | default('0')}}"
                        enable="{{event.default_listener.user_mgt_audit_logger.enable}}"/>
 
         <!-- New Audit Loggers-->
         <EventListener id="user_management_audit_logger"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.listeners.UserManagementAuditLogger"
-                       orderId="{{event.default_listener.user_management_audit_logger.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.user_management_audit_logger.priority | default('0')}}"
                        enable="{{event.default_listener.user_management_audit_logger.enable}}"/>
         <EventListener id="user_failure_audit_logger"
                        type="org.wso2.carbon.user.core.listener.UserManagementErrorEventListener"
                        name="org.wso2.carbon.user.mgt.listeners.UserMgtFailureAuditLogger"
-                       orderId="{{event.default_listener.user_failure_audit_logger.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.user_failure_audit_logger.priority | default('0')}}"
                        enable="{{event.default_listener.user_failure_audit_logger.enable}}"/>
        <EventListener id="unique_claim_user_operation_event_listener"
                       type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                       name="org.wso2.carbon.identity.unique.claim.mgt.listener.UniqueClaimUserOperationEventListener"
-                      orderId="{{event.default_listener.unique_claim_user_operation_event_listener.priority | default('0', true)}}"
+                      orderId="{{event.default_listener.unique_claim_user_operation_event_listener.priority | default('0')}}"
                       enable="{{event.default_listener.unique_claim_user_operation_event_listener.enable}}"/>
         <EventListener id="user_claim_audit_logger"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.listeners.UserClaimsAuditLogger"
-                       orderId="{{event.default_listener.user_claim_audit_logger.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.user_claim_audit_logger.priority | default('0')}}"
                        enable="{{event.default_listener.user_claim_audit_logger.enable}}">
             <Property name="LogUpdatedClaimsOnly">{{event.default_listener.user_claim_audit_logger.LogUpdatedClaimsOnly}}</Property>
         </EventListener>
         <EventListener id="client_certificate_authentication_handler"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
                        name="org.wso2.carbon.identity.auth.service.handler.impl.ClientCertificateBasedAuthenticationHandler"
-                       orderId="{{event.default_listener.client_certificate_authentication_handler.priority | default('0', true)}}"
+                       orderId="{{event.default_listener.client_certificate_authentication_handler.priority | default('0')}}"
                        enable="{{event.default_listener.client_certificate_authentication_handler.enable}}"/>
 
         <!-- Introspection Data Providers -->
         <EventListener id="is_introspection_data_provider" type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
                 name="org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.ISIntrospectionDataProvider"
-                orderId="{{event.default_listener.is_introspection_data_provider.priority | default('0', true)}}"
+                orderId="{{event.default_listener.is_introspection_data_provider.priority | default('0')}}"
                 enable="{{event.default_listener.is_introspection_data_provider.enable}}">
         </EventListener>
 
         {% if identity_mgt.user_claim_update.uniqueness.enable is defined %}
             <EventListener id="unique_claim_user_operation_event_listener" type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                     name="org.wso2.carbon.identity.unique.claim.mgt.listener.UniqueClaimUserOperationEventListener"
-                    orderId="{{identity_mgt.user_claim_update.uniqueness.listener_priority | default('0', true)}}"
+                    orderId="{{identity_mgt.user_claim_update.uniqueness.listener_priority | default('0')}}"
                     enable="{{identity_mgt.user_claim_update.uniqueness.enable}}">
                     <Property name="ScopeWithinUserstore">{{identity_mgt.user_claim_update.uniqueness.scope_within_userstore}}</Property>
             </EventListener>
@@ -1715,7 +1715,7 @@
         <EventListener id="provision_error_listener"
                 type="org.wso2.carbon.user.core.listener.UserManagementErrorEventListener"
                 name="org.wso2.carbon.identity.provisioning.listener.ProvisioningErrorListener"
-                orderId="{{event.default_listener.outbound_provisioning_error_handler.priority | default('0', true)}}"
+                orderId="{{event.default_listener.outbound_provisioning_error_handler.priority | default('0')}}"
                 enable="{{event.default_listener.outbound_provisioning_error_handler.enable}}">
         </EventListener>
         {% if analytics.elk.enable is defined && analytics.elk.enable is sameas true %}
