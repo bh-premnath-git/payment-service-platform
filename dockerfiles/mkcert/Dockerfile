@@ -1,13 +1,7 @@
 FROM alpine:3.19
 
-ARG MKCERT_VERSION=1.4.4
-ARG MKCERT_SHA256=8840ae6c5718262442d0912dce6e7b365ddfd00563d1767c9de10e7198d9e48d
-
-RUN apk add --no-cache nss-tools ca-certificates openssl curl \
-    && update-ca-certificates \
-    && curl -fsSL "https://github.com/FiloSottile/mkcert/releases/download/v${MKCERT_VERSION}/mkcert-v${MKCERT_VERSION}-linux-amd64" -o /usr/local/bin/mkcert \
-    && echo "${MKCERT_SHA256}  /usr/local/bin/mkcert" | sha256sum -c - \
-    && chmod +x /usr/local/bin/mkcert
+RUN apk add --no-cache mkcert nss-tools ca-certificates openssl \
+    && update-ca-certificates
 
 ENV CERT_DIR=/certs \
     CA_DIR=/certs \
