@@ -87,7 +87,7 @@ Runtime and build-time parameters are centralized in the [`.env`](./.env) file. 
 - The custom MySQL configuration disables SSL (`command: [--ssl=0]`) to match the JDBC URLs packaged with the WSO2 products. Ensure your local security requirements align with this choice before using in production.
 - If the WSO2 containers fail to start, check the logs with `docker compose logs api-manager is-as-km` to confirm that the MySQL database initialization scripts finished executing. The `mysql` health check waits for the `initialization-complete.flag` file before marking the service as healthy.
 - For additional customization, update the configuration templates in `conf/is-as-km/repository/resources/conf/templates` and re-run the stack.
-- If the Identity Server log reports errors such as `Resource type with the name: CERTIFICATE_VALIDATOR does not exists`, `Resource type with the name: REMOTE_LOGGING_CONFIG does not exists`, or missing tables like `WSO2AM_DB.API_RESOURCE`, drop the MySQL volume (or delete the schema) and restart the stack so that the [configuration management DDL](conf/mysql/scripts/mysql_apim.sql) runs. This reapplies the full identity configuration schema, including resource types for the X.509 validator and remote logging as well as the API resource management tables.
+- If the Identity Server log reports an error similar to `Resource type with the name: CERTIFICATE_VALIDATOR does not exists`, drop the MySQL volume (or delete the schema) and restart the stack so that the [configuration management DDL](conf/mysql/scripts/mysql_apim.sql) runs. This inserts the required `CERTIFICATE_VALIDATOR` resource type for the X.509 certificate validator.
 
 ## License
 

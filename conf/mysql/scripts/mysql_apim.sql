@@ -1014,20 +1014,8 @@ INSERT INTO IDN_CONFIG_TYPE (ID, NAME, DESCRIPTION) VALUES
 ('8ec6dbf1-218a-49bf-bc34-0d2db52d151c', 'CORS_CONFIGURATION', 'A resource type to keep the tenant CORS configurations'),
 ('669b99ca-cdb0-44a6-8cae-babed3b585df', 'Publisher', 'A resource type to keep the event publisher configurations'),
 ('73f6d9ca-62f4-4566-bab9-2a930ae51ba8', 'BRANDING_PREFERENCES', 'A resource type to keep the tenant branding preferences'),
-('8469a176-3e6c-438a-ba01-71e9077072fa', 'APPLICATION_BRANDING_PREFERENCES', 'A resource type to keep the application branding preferences'),
 ('899c69b2-8bf7-46b5-9666-f7f99f90d6cc', 'fido-config', 'A resource type to store FIDO authenticator related preferences'),
-('7f24050f-3e3d-4a00-b10f-fd5450d6523e', 'input-validation-configurations', 'A resource type to store input validation related configurations'),
-('f4e83b8a-d1c4-a0d6-03a7-d48e268c60c5', 'PK_JWT_CONFIGURATION', 'A resource type to keep the tenant private key jwt configuration.'),
-('9ec61e9d-f0e6-4952-9a09-ab842aeb2db2', 'ATTRIBUTE_CONFIGURATION', 'A resource type to store attribute related configurations.'),
-('132b0ee6-43e0-462d-8b4b-15b68109d71d', 'ORGANIZATION_CONFIGURATION', 'A resource type to keep the organization configurations.'),
-('1fc809a0-dc0d-4cb2-82f3-58934d389236', 'CUSTOM_TEXT', 'A resource type to keep the tenant custom text preferences.'),
-('c385a42a-5697-4604-b49a-62456621e926', 'DCR_CONFIGURATION', 'A resource type to keep the DCR configurations.'),
-('3e5b1f91-72d8-4fbc-94d1-1b9a4f8c3b07', 'IMPERSONATION_CONFIGURATION', 'A resource type to keep the tenant impersonation preferences.'),
-('a731af34-f96a-4069-812d-30dc3b713a28', 'response-max-limit-configurations', 'A resource type to max limit configurations for API response.'),
-('91116e95-ca63-4787-be2d-de13d04d1b55', 'CERTIFICATE_VALIDATOR', 'A resource type to keep the certificate validators.'),
-('a17952b9-0942-4669-8529-479ca481146b', 'CERTIFICATE_REVOCATION_VALIDATION_CA', 'A resource type to keep the certificate revocation validation related certificate authorities.'),
-('32360745-9c3e-4391-b563-66f17f0eb93a', 'ADMIN_ADVISORY_BANNER', 'A resource type to store admin advisory banner configurations.'),
-('82ab7001-fb0e-44da-9169-1f63e4964d9b', 'REMOTE_LOGGING_CONFIG', 'A resource type to store remote server logger configurations.');
+('964f6a2b-2d1f-4e1a-8d34-5ef3bd2a5c2b', 'CERTIFICATE_VALIDATOR', 'A resource type to keep certificate validator configurations');
 
 CREATE TABLE IF NOT EXISTS IDN_CONFIG_RESOURCE (
     ID VARCHAR(255) NOT NULL,
