@@ -13,6 +13,7 @@ create_admin_account = true
 type = "database_unique_id"
 
 [database.identity_db]
+name = "WSO2IDENTITY_DB"
 type = "mysql"
 url = "jdbc:mysql://mysql:3306/WSO2IS_IDENTITY_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false"
 username = "wso2carbon"
@@ -20,11 +21,26 @@ password = "wso2carbon"
 driver = "com.mysql.cj.jdbc.Driver"
 
 [database.shared_db]
+name = "WSO2UM_DB"
 type = "mysql"
-url = "jdbc:mysql://mysql:3306/WSO2IS_SHARED_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false"
+url = "jdbc:mysql://mysql:3306/WSO2IS_UM_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false"
 username = "wso2carbon"
 password = "wso2carbon"
 driver = "com.mysql.cj.jdbc.Driver"
+
+[database.config]
+name = "WSO2CONFIG_DB"
+type = "mysql"
+url = "jdbc:mysql://mysql:3306/WSO2IS_CONFIG_DB?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false"
+username = "wso2carbon"
+password = "wso2carbon"
+driver = "com.mysql.cj.jdbc.Driver"
+
+[realm_manager]
+data_source = "WSO2UM_DB"
+
+[user_store.properties]
+data_source = "WSO2UM_DB"
 
 [identity_gov.identity_data_store]
 store_class_name = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"

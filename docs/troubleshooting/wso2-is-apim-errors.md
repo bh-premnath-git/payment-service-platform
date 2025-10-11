@@ -26,6 +26,74 @@ Restore the default JDBC data store configuration. Use either option below:
 
 If you use a custom data store implementation, set its fully qualified class name instead.
 
+## DefaultRealm/User Store Initialization Failure
+
+**Log snippets**
+```
+DefaultRealm ... UserStoreException ... DB error occurred while persisting domain : PRIMARY & tenant id : -1234
+Caused by: SQLNonTransientConnectionException: Could not create connection ...
+Caused by: CJException: Access denied for user 'wso2carbon'@'%' to database 'WSO2IS_SHARED_DB'
+```
+
+**Cause**
+
+Identity Server cannot initialize the primary user store because the datasource targets `WSO2IS_SHARED_DB`, a schema the
+`wso2carbon` user cannot access (or that does not exist). The user store bundles depend on the database connection and fail
+cascadingly, so resolving the datasource mapping fixes the downstream errors (e.g., "Cannot start User Manager Core bundle").
+
+**Fix**
+
+1. **Create the intended schemas and grant privileges** – Unless you explicitly need a shared database, use the standard IS
+   schemas and grant full access to the integration user:
+   ```sql
+   CREATE DATABASE WSO2IS_IDENTITY_DB CHARACTER SET utf8mb4;
+   CREATE DATABASE WSO2IS_UM_DB       CHARACTER SET utf8mb4;
+   CREATE DATABASE WSO2IS_CONFIG_DB   CHARACTER SET utf8mb4;
+
+   CREATE USER 'wso2carbon'@'%' IDENTIFIED BY '<DB_PASSWORD>';
+   GRANT ALL PRIVILEGES ON WSO2IS_IDENTITY_DB.* TO 'wso2carbon'@'%';
+   GRANT ALL PRIVILEGES ON WSO2IS_UM_DB.*       TO 'wso2carbon'@'%';
+   GRANT ALL PRIVILEGES ON WSO2IS_CONFIG_DB.*   TO 'wso2carbon'@'%';
+   FLUSH PRIVILEGES;
+   ```
+2. **Point datasources to the correct schemas** – Update `<IS_HOME>/repository/conf/deployment.toml` so each datasource
+   references the matching schema (note that Identity Server still uses `database.shared_db` for the primary user store by
+   default):
+   ```toml
+   [database.identity_db]
+   type = "mysql"
+   url = "jdbc:mysql://<mysql-host>:3306/WSO2IS_IDENTITY_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+   username = "wso2carbon"
+   password = "<DB_PASSWORD>"
+
+   [database.shared_db]
+   type = "mysql"
+   url = "jdbc:mysql://<mysql-host>:3306/WSO2IS_UM_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+   username = "wso2carbon"
+   password = "<DB_PASSWORD>"
+
+   [database.config]
+   type = "mysql"
+   url = "jdbc:mysql://<mysql-host>:3306/WSO2IS_CONFIG_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+   username = "wso2carbon"
+   password = "<DB_PASSWORD>"
+   ```
+   If you override the realm manager or user store blocks, point them at the same `WSO2IS_UM_DB` datasource.
+   Only use a `*_SHARED_DB` schema when you have a specific requirement for one.
+3. **Load the IS schema DDL** – From the product pack, execute the scripts against the corresponding databases:
+   ```bash
+   mysql -u root -p WSO2IS_IDENTITY_DB < dbscripts/identity/mysql.sql
+   mysql -u root -p WSO2IS_UM_DB       < dbscripts/um/mysql.sql       # sometimes mysql5.sql
+   mysql -u root -p WSO2IS_CONFIG_DB   < dbscripts/config/mysql.sql
+   ```
+4. **Run a quick connectivity test** – Before restarting IS, confirm the integration user can connect:
+   ```bash
+   mysql -h <mysql-host> -u wso2carbon -p WSO2IS_UM_DB -e "select 1;"
+   ```
+
+Restart Identity Server after completing the steps. The `DefaultRealm` and `User Manager Core` errors should no longer appear,
+and OAuth services will activate without further waiting messages.
+
 ## Missing Baseline Internal Roles
 
 **Log snippets**
@@ -40,17 +108,8 @@ The default internal roles (e.g., `Internal/everyone`, `Internal/system`) are ab
 
 **Fix**
 
-1. Confirm that the primary user store datasource is reachable and credentials are correct.
-2. Apply the initial DDL to the databases referenced by the Identity and User Management datasources:
-   - Execute the scripts under `<IS_HOME>/dbscripts/identity/` and `<IS_HOME>/dbscripts/um/` against the corresponding schemas (e.g., `WSO2IS_IDENTITY_DB`, `WSO2IS_UM_DB`).
-3. If you previously encountered `Access denied for user 'wso2carbon'`, grant the correct privileges, for example:
-   ```sql
-   CREATE USER 'wso2carbon'@'%' IDENTIFIED BY 'yourpass';
-   GRANT ALL PRIVILEGES ON WSO2IS_IDENTITY_DB.* TO 'wso2carbon'@'%';
-   GRANT ALL PRIVILEGES ON WSO2IS_UM_DB.*       TO 'wso2carbon'@'%';
-   FLUSH PRIVILEGES;
-   ```
-4. Verify that tables such as `UM_ROLE` (schema dependent) now include the seeded roles. Re-run the DDL scripts if the roles are still missing.
+1. Complete the remediation steps in [DefaultRealm/User Store Initialization Failure](#defaultrealmuser-store-initialization-failure) so the datasources reference valid schemas with appropriate privileges and DDL applied.
+2. Verify that tables such as `UM_ROLE` (schema dependent) now include the seeded roles. Re-run the DDL scripts if the roles are still missing.
 
 ## Extension Manager NullPointerException
 
