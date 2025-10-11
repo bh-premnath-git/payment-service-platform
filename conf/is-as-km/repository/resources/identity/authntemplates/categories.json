@@ -1,0 +1,25 @@
+{
+  "AccessControl": {
+    "displayName": "Access Control",
+    "order": 1,
+    "icon": "./images/access-control-template.png"
+  },
+
+  "AdaptiveMFA": {
+    "displayName": "Adaptive MFA",
+    "order": 2,
+    "icon": "./images/adaptive-mfa-template.png"
+  },
+
+  "UserAttributes": {
+    "displayName": "User Attributes",
+    "order": 3,
+    "icon": "./images/user-attributes-template.png"
+  },
+
+  "ProgressiveEnrollment": {
+    "displayName": "Progressive Enrollment",
+    "order": 4,
+    "icon": "./images/progressive-enrollment-template.png"
+  }
+}

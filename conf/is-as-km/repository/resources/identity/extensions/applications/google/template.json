@@ -1,0 +1,95 @@
+{
+    "payload": {
+        "name": "Google Workspace",
+        "advancedConfigurations": {
+            "discoverableByEndUsers": true,
+            "skipLogoutConsent": true
+        },
+        "imageUrl": "${clientOrigin}/${appBaseNameWithoutTenant}/resources/connections/assets/images/logos/google.svg",
+        "accessUrl": "${serverOrigin}/t/${tenantDomain}/samlsso?spEntityID=${inboundProtocolConfiguration.saml.manualConfiguration.issuer}",
+        "authenticationSequence": {
+            "type": "DEFAULT",
+            "steps": [
+                {
+                    "id": 1,
+                    "options": [
+                        {
+                            "idp": "LOCAL",
+                            "authenticator": "basic"
+                        }
+                    ]
+                }
+            ]
+        },
+        "claimConfiguration": {
+            "dialect": "LOCAL",
+            "claimMappings": [
+                {
+                    "applicationClaim": "http://wso2.org/claims/emailaddress",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/emailaddress"
+                    }
+                }
+            ],
+            "requestedClaims": [
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/emailaddress"
+                    },
+                    "mandatory": true
+                }
+            ],
+            "subject": {
+                "claim": {
+                    "uri": "http://wso2.org/claims/emailaddress"
+                },
+                "includeUserDomain": false,
+                "includeTenantDomain": false,
+                "useMappedLocalSubject": false,
+                "mappedLocalSubjectMandatory": false
+            }
+        },
+        "inboundProtocolConfiguration": {
+            "saml": {
+                "manualConfiguration": {
+                    "issuer": "",
+                    "assertionConsumerUrls": [
+                        "${inboundProtocolConfiguration.saml.manualConfiguration.issuer}/acs"
+                    ],
+                    "defaultAssertionConsumerUrl": "${inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]}",
+                    "responseSigning": {
+                        "enabled": true,
+                        "signingAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+                    },
+                    "singleSignOnProfile": {
+                        "enableIdpInitiatedSingleSignOn": true,
+                        "assertion": {
+                            "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
+                            "encryption": {
+                                "enabled": false,
+                                "assertionEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+                                "keyEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+                            }
+                        },
+                        "bindings": [
+                            "HTTP_REDIRECT",
+                            "HTTP_POST"
+                        ]
+                    },
+                    "attributeProfile": {
+                        "enabled": true,
+                        "alwaysIncludeAttributesInResponse": true
+                    },
+                    "singleLogoutProfile": {
+                        "enabled": true,
+                        "logoutResponseUrl": "",
+                        "logoutMethod": "FRONTCHANNEL_HTTP_REDIRECT"
+                    },
+                    "requestValidation": {
+                        "enableSignatureValidation": false
+                    }
+                }
+            }
+        }
+    }
+}

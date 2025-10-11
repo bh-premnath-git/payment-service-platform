@@ -1,0 +1,186 @@
+{
+    "create": {
+        "form": {
+            "fields": [
+                {
+                    "id": "application-name",
+                    "aria-label": "Application Name",
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "My App",
+                    "dataComponentId": "google-workspace-create-wizard-application-name",
+                    "handlers": [
+                        {
+                            "name": "uniqueApplicationName",
+                            "type": "initialize"
+                        },
+                        {
+                            "name": "applicationName",
+                            "type": "validation"
+                        }
+                    ]
+                },
+                {
+                    "id": "entityID",
+                    "aria-label": "Entity ID",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.issuer",
+                    "label": "Entity ID",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "https://accounts.google.com/samlrp/iurtkmtoer43e",
+                    "helperText": "The Entity ID of Google's SAML SSO profile.",
+                    "dataComponentId": "google-workspace-create-wizard-entity-id"
+                },
+                {
+                    "id": "assertion-Consumer-Urls",
+                    "aria-label": "Assertion Consumer Urls",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]",
+                    "label": "Assertion Consumer Urls",
+                    "type": "text",
+                    "required": true,
+                    "dataComponentId": "google-workspace-create-wizard-acs",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.issuer"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "access-url",
+                    "aria-label": "Access URL",
+                    "name": "accessUrl",
+                    "label": "Access URL",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "google-workspace-create-wizard-access-url",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.issuer"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "tenantDomain"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "serverOrigin"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "image-url",
+                    "aria-label": "Image URL",
+                    "name": "imageUrl",
+                    "label": "Image URL",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "google-workspace-create-wizard-image-url",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "clientOrigin"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "appBaseNameWithoutTenant"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "default-assertion-consumer-url",
+                    "ariaLabel": "Default Assertion Consumer URL",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.defaultAssertionConsumerUrl",
+                    "label": "Default Assertion Consumer URL",
+                    "type": "text",
+                    "required": false,
+                    "hidden": true,
+                    "dataComponentId": "google-workspace-wizard-form-default-assertion-consumer-url",
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "guide": [ "##### Name\n***\n***\nA unique name to identify your google workspace SSO application.\n***\nE.g., Google Workspace\n***\n***\n***\n***\n##### Entity ID\n***\n***\nA unique URL dynamically generated for your Google SAML SSO profile. To find it, follow [Google's guide](https://support.google.com/a/answer/12032922?hl=en&ref_topic=7579248&sjid=3736947215943977003-AP#create_profile) on creating a SAML SSO profile. Once completed, copy the `Entity ID` from the `SP Details` section of the specific SAML SSO profile.\n***\n> When setting up the SAML SSO profile in Google, you only need to provide a name for the profile initially. You can add the `IDP details` later by following our `Quick Start` guide, which will appear after the application is created.\n<!--rehype:type=info&title=Note-->" ]
+    },
+    "edit": {
+        "tabs": [
+            {
+                "id": "quick-start",
+                "displayName": "Guide",
+                "contentType": "guide",
+                "guide": "## Configure Google Workspace\n***\n***\n***\nFollow the steps below to configure the Google Workspace SSO profile using SAML 2.0 protocol to allow organization users to log in to Google Workspace using ${productName}.\n***\n***\n***\n> Ensure you have a Google Workspace account with admin privileges.\n<!--rehype:type=info&title=Prerequisites-->\n***\n***\n***\n***\n### Setup ${productName} SSO in Google\n<!--rehype:numbered=true&content=1-->\n***\n***\nFollow Google’s instructions to [configure the SSO profile](https://support.google.com/a/answer/12032922?hl=en&ref_topic=7579248&sjid=3736947215943977003-AP#org_profile) which is already created. During this process, use the details below:\n***\n***\nIDP entity ID:    \n***\n```bash\n${metadata.saml.issuer}\n```\n***\n***\nSign-in page URL: \n***\n```bash\n${metadata.saml.ssoUrl}\n```\n***\n***\nSign-out page URL:    \n***\n```bash\n${metadata.saml.sloUrl}\n```\n***\n***\nChange Password URL (optional):\n***\n```bash\n${accountAppURL}\n```\n***\n***\nDownload and upload the following X.509 certificate supplied by ${productName}.\n*** \n[Download Certificate](${serverOrigin}/identity/metadata/saml2)<!--rehype:download=true&content=${moderatedData.pemCertificate}&type=application/x-x509-ca-cert&fileName=Certificate&as=button-->     \n***\n***  \n***  \n### Try out SSO\n<!--rehype:numbered=true&content=2-->\n***\n***\n> To test the SSO configuration, [create a user](/users)<!--rehype:external=false--> in the ${productName} with the email address of a user existing in the Google Workspace organization.\n<!--rehype:type=warning-->\n\n"
+            },
+            {
+                "id": "general",
+                "hiddenComponents": [
+                    "application-edit-general-details-form-image-url"
+                ]
+            },
+            {
+                "id": "protocol",
+                "displayName": "Protocol",
+                "hiddenComponents": [
+                    "application-edit-inbound-saml-form-issuer",
+                    "application-edit-inbound-saml-form-application-qualifier",
+                    "application-edit-inbound-saml-form-idp-entity-id-alias",
+                    "application-edit-inbound-saml-form-bindings",
+                    "application-edit-inbound-saml-form-signature-validation-for-artifact-binding",
+                    "application-edit-inbound-saml-form-audience",
+                    "application-edit-inbound-saml-form-recipient",
+                    "application-edit-inbound-saml-form-assertion-query-profile",
+                    "application-edit-inbound-saml-form-certificate",
+                    "application-edit-inbound-saml-form-request-validation",
+                    "application-edit-inbound-saml-form-attribute-name-format"
+                ]
+            },
+            {
+                "id": "user-attributes",
+                "hiddenComponents": [
+                    "application-edit-user-attributes-linked-accounts",
+                    "application-edit-user-attributes--validate-linked-local-accounts",
+                    "application-edit-user-attributes-include-tenant-domain",
+                    "application-edit-user-attributes-include-user-domain"
+                ]
+            },
+            {
+                "id": "sign-in-method"
+            },
+            {
+                "id": "shared-access"
+            }
+        ],
+        "defaultActiveTabId": "quick-start"
+    }
+}

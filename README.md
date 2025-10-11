@@ -72,8 +72,8 @@ Runtime and build-time parameters are centralized in the [`.env`](./.env) file. 
    | Management Console | `https://localhost:${APIM_HTTPS_PORT}/carbon` |
 
    Use the default credentials unless you have changed them in the configuration files:
-   - **Username:** `admin`
-   - **Password:** `admin`
+  - **Username:** `admin`
+  - **Password:** `ChangeMeNow!2024`
 
    The API Gateway is published on:
    - `https://localhost:${APIM_GATEWAY_HTTPS_PORT}`

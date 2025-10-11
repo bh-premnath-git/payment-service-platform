@@ -1,5 +1,5 @@
 [server]
-hostname = "localhost"
+hostname = "api-manager"
 #offset=0
 base_path = "${carbon.protocol}://${carbon.host}:${carbon.management.port}"
 #discard_empty_caches = false
@@ -7,7 +7,7 @@ server_role = "default"
 
 [super_admin]
 username = "admin"
-password = "admin"
+password = "ChangeMeNow!2024"
 create_admin_account = true
 
 [user_store]
@@ -33,6 +33,13 @@ type =  "JKS"
 password =  "wso2carbon"
 alias =  "wso2carbon"
 key_password =  "wso2carbon"
+
+[transport.https]
+key_alias = "wso2apim"
+keystore.file_name = "wso2carbon.jks"
+keystore.password = "wso2carbon"
+truststore.file_name = "client-truststore.jks"
+truststore.password = "wso2carbon"
 
 #[keystore.listener_profile]
 #bind_address = "0.0.0.0"

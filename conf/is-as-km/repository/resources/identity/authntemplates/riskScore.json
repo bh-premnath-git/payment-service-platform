@@ -1,0 +1,64 @@
+{
+  "category": "AdaptiveMFA",
+  "name": "[Deprecated] Risk-Based",
+  "title": "Risk-Based 2FA Template [Deprecated]",
+  "summary": "Prompts 2FA based on the risk score calculated by the analytics engine. This template is deprecated. Using the ELK-Risk-Based 2FA Template with ELK for risk-based authentication is recommended.",
+  "preRequisites": [
+    "Change the siddhiApplication and siddhiInputStream according to the Siddhi application you have deployed in the Stream Processor.",
+    "Modify the default authentication steps and option(s) as required."
+  ],
+  "parametersDescription": {
+    "siddhiApplication" : "Name of the Siddhi application in the Stream processor",
+    "siddhiInputStream" : "Name of the input stream in the above Siddhi application"
+  },
+  "defaultStepsDescription": {
+    "Step 1": "Basic (Password) authenticator",
+    "Step 2": "TOTP authenticator"
+  },
+  "authenticationSteps":2,
+  "defaultAuthenticators": {
+    "1": {
+      "local": [
+        "BasicAuthenticator"
+      ],
+      "federated": []
+    },
+    "2": {
+      "local": [
+        "totp"
+      ],
+      "federated": []
+    }
+  },
+  "helpLink": "",
+  "code": [
+    "// [Deprecated - Use ELK-Risk-Based with ELK analytics integration]",
+    "",
+    "// Define conditional authentication by risk score value calculated from analytics engine.",
+    "",
+    "// Specify the Siddhi application name.",
+    "var siddhiApplication = 'RiskBasedLogin';",
+    "// Specify the Siddhi input stream name.",
+    "var siddhiInputStream = 'InputStream';",
+    "",
+    "var onLoginRequest = function(context) {",
+    "    executeStep(1, {",
+    "        onSuccess: function (context) {",
+    "            var username = context.currentKnownSubject.username;",
+    "            callAnalytics({'Application':siddhiApplication,'InputStream':siddhiInputStream}, {'username':username}, {",
+    "                onSuccess : function(context, data) {",
+    "                    Log.info('--------------- Received risk score value: ' + data.event.riskScore);",
+    "                    if (data.event.riskScore > 0) {",
+    "                        executeStep(2);",
+    "                    }",
+    "                }, onFail : function(context, data) {",
+    "                    Log.info('--------------- Failed to call analytics engine');",
+    "                    executeStep(2);",
+    "                }",
+    "            });",
+    "        }",
+    "    });",
+    "};"
+  ],
+  "runtime": "any"
+}

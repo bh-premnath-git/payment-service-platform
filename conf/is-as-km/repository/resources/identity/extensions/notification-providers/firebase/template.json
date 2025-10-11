@@ -1,0 +1,11 @@
+{
+  "payload": {
+    "provider": "FCM",
+    "properties": [
+      {
+        "key": "serviceAccountContent",
+        "value": "serviceAccountContent"
+      }
+    ]
+  }
+}

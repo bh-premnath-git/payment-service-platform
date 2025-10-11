@@ -1,0 +1,38 @@
+{
+    "id": "traditional-web-application",
+    "version": "1.0.0",
+    "name": "Traditional Web Application",
+    "description": "A web application that runs application logic on the server.",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/traditional-template.svg",
+    "displayOrder": 1,
+    "category": "DEFAULT",
+    "tags": [
+        "Default",
+        "OIDC",
+        "SAML"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "supportedTechnologies",
+            "value": [
+                {
+                    "displayName": "Java EE",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/java-logo.svg"
+                },
+                {
+                    "displayName": ".NET",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/dotnet-logo.svg"
+                },
+                {
+                    "displayName": "Node.js",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/nodejs-logo.svg"
+                },
+                {
+                    "displayName": "PHP",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/php-logo.svg"
+                }
+            ]
+        }
+    ]
+}

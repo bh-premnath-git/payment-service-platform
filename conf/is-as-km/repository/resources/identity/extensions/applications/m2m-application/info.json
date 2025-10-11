@@ -1,0 +1,29 @@
+{
+    "id": "m2m-application",
+    "version": "1.0.0",
+    "name": "M2M Application",
+    "description": "Applications tailored for Machine to Machine communication",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/m2m-template.svg",
+    "displayOrder": 4,
+    "category": "DEFAULT",
+    "tags": [
+        "Default",
+        "OAuth2"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "supportedTechnologies",
+            "value": [
+                {
+                    "displayName": "OAuth2",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/oauth2.png"
+                }
+            ]
+        },
+        {
+            "key": "featureStatus",
+            "value": "new"
+        }
+    ]
+}

@@ -1,0 +1,238 @@
+{
+    "create": {
+        "form": {
+            "fields": [
+                {
+                    "id": "application-name",
+                    "aria-label": "Application Name",
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "My App",
+                    "dataComponentId": "slack-create-wizard-application-name",
+                    "handlers": [
+                        {
+                            "name": "uniqueApplicationName",
+                            "type": "initialize"
+                        },
+                        {
+                            "name": "applicationName",
+                            "type": "validation"
+                        }
+                    ]
+                },
+                {
+                    "id": "assertion-consumer-url",
+                    "ariaLabel": "Assertion Consumer URL",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]",
+                    "label": "Assertion Consumer URL",
+                    "type": "text",
+                    "required": false,
+                    "hidden": true,
+                    "dataComponentId": "slack-wizard-form-assertion-consumer-url",
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "domainName"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "issuer-name",
+                    "aria-label": "Issuer Name",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.issuer",
+                    "label": "Issuer Name",
+                    "type": "select",
+                    "helperText": "Unique identifier for the Slack service provider.",
+                    "required": true,
+                    "placeholder": "Select the Issuer Name",
+                    "dataComponentId": "slack-create-wizard-issuer-name",
+                    "options": [
+                        {
+                            "text": "Slack URL (https://slack.com)",
+                            "value": "https://slack.com"
+                        },
+                        {
+                            "text": "Slack Workspace URL",
+                            "value": "https://${domainName}.slack.com"
+                        }
+                    ],
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "domainName"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "domain-name",
+                    "aria-label": "Domain name",
+                    "name": "domainName",
+                    "label": "Domain name",
+                    "type": "text",
+                    "placeholder": "your-workspace-domain",
+                    "helperText": "Domain name of the Slack workspace.",
+                    "required": true,
+                    "dataComponentId": "slack-create-wizard-domain-name",
+                    "hidden": false,
+                    "handlers": [
+                        {
+                            "name": "disableProperty",
+                            "type": "submission"
+                        }
+                    ]
+                },
+                {
+                    "id": "access-url",
+                    "aria-label": "Access URL",
+                    "name": "accessUrl",
+                    "label": "Access URL",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "slack-create-wizard-access-url",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.issuer"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "tenantDomain"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "serverOrigin"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "image-url",
+                    "aria-label": "Image URL",
+                    "name": "imageUrl",
+                    "label": "Image URL",
+                    "type": "text",
+                    "required": false,
+                    "dataComponentId": "slack-create-wizard-image-url",
+                    "hidden": true,
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "clientOrigin"
+                            }
+                        },
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "appBaseNameWithoutTenant"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "default-assertion-consumer-url",
+                    "ariaLabel": "Default Assertion Consumer URL",
+                    "name": "inboundProtocolConfiguration.saml.manualConfiguration.defaultAssertionConsumerUrl",
+                    "label": "Default Assertion Consumer URL",
+                    "type": "text",
+                    "required": false,
+                    "hidden": true,
+                    "dataComponentId": "slack-wizard-form-default-assertion-consumer-url",
+                    "handlers": [
+                        {
+                            "name": "dependentProperty",
+                            "type": "submission",
+                            "props": {
+                                "placeholder": "inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "guide": [ "##### Name\n***\n***\nA unique name to identify your slack SSO application.\n***\nE.g., Slack\n***\n***\n***\n***\n##### Issuer Name\n***\n***\nA unique identifier to identify your slack service provider. \n***\n> By default, Slack uses `https://slack.com` as the Issuer Name. You only need to modify this value if creating multiple Slack SSO applications. If you choose `Slack Workspace URL` as the Issuer Name, ensure that Slack's configuration is updated accordingly.\n<!--rehype:type=warning-->\n***\n***\n***\n***\n##### Domain Name\n***\n***\nThe first part of your Slack workspace URL.\n***\nE.g., If your Slack workspace URL is `https://myorg.slack.com`, enter `myorg` as the Domain Name.\n***\n> Follow Slack's guidelines to [locate your Slack URL](https://slack.com/intl/en-gb/help/articles/221769328-Locate-your-Slack-URL-or-ID).\n<!--rehype:type=info-->" ]
+    },
+    "edit": {
+        "tabs": [
+            {
+                "id": "quick-start",
+                "displayName": "Guide",
+                "contentType": "guide",
+                "guide": "## Configure Slack\n***\n***\n***\nFollow the steps below to configure the Slack SSO profile using SAML 2.0 protocol to allow organization users to log in to Slack using ${productName}.\n***\n***\n***\n> Ensure your Slack account supports SSO. Check the [Slack documentation](https://slack.com/intl/en-gb/help/articles/203772216-SAML-single-sign-on).\n<!--rehype:type=info&title=Prerequisites-->\n***\n***\n***\n***\n### Setup ${productName} SSO in Slack\n<!--rehype:numbered=true&content=1-->\n***\n***\nConfigure the following properties in Slack's SSO settings section. Refer to [Slack's guide](https://slack.com/intl/en-gb/help/articles/203772216-SAML-single-sign-on#step-2u58-set-up-saml-sso) to locate the configuration fields mentioned below.\n***\n***\nSAML 2.0 Endpoint:\n***\n```bash\n${metadata.saml.ssoUrl}\n```\n***\n***\nIdentity provider issuer:    \n***\n```bash\n${metadata.saml.issuer}\n```\n***\n***\nPublic certificate:\n***\n```bash\n${metadata.saml.certificate}\n```\n***\n***\n> By default, Slack uses `https://slack.com` as the `Service Provider Issuer`. If you change this value while creating the application, ensure that the following value is entered in the `Service Provider Issuer` field under the `Advanced Options` section in the Slack SSO configuration.\n<!--rehype:type=info-->\n***\nService provider issuer:\n***\n```bash\n${protocol.saml.issuer}\n```\n***\n***\n> When you save/test the SSO configurations in the Slack admin portal, you will be redirected to the ${productName} login page to bind your Slack admin account with the corresponding ${productName} account. The configurations will only take effect if the account binding is successful.\n<!--rehype:type=warning-->\n***\n***  \n***  \n### Try out SSO\n<!--rehype:numbered=true&content=2-->\n***\n***\n> To test the SSO configuration, [create users](/users)<!--rehype:external=false--> in the ${productName} and follow the [slack guide](https://slack.com/intl/en-gb/help/articles/203772216-SAML-single-sign-on#what-to-expect).\n<!--rehype:type=warning-->\n\n"
+            },
+            {
+                "id": "general",
+                "hiddenComponents": [
+                    "application-edit-general-details-form-image-url"
+                ]
+            },
+            {
+                "id": "protocol",
+                "displayName": "Protocol",
+                "hiddenComponents": [
+                    "application-edit-inbound-saml-form-issuer",
+                    "application-edit-inbound-saml-form-application-qualifier",
+                    "application-edit-inbound-saml-form-idp-entity-id-alias",
+                    "application-edit-inbound-saml-form-sign-saml-responses",
+                    "application-edit-inbound-saml-form-sign-saml-responses-header",
+                    "application-edit-inbound-saml-form-sign-digest-algorithm",
+                    "application-edit-inbound-saml-form-sign-algorithm",
+                    "application-edit-inbound-saml-form-bindings",
+                    "application-edit-inbound-saml-form-signature-validation-for-artifact-binding",
+                    "application-edit-inbound-saml-form-name-id-format",
+                    "application-edit-inbound-saml-form-audience",
+                    "application-edit-inbound-saml-form-recipient",
+                    "application-edit-inbound-saml-form-assertion-encryption-algorithm",
+                    "application-edit-inbound-saml-form-key-encryption-algorithm",
+                    "application-edit-inbound-saml-form-attribute-profile-heading",
+                    "application-edit-inbound-saml-form-enable-attribute-profile",
+                    "application-edit-inbound-saml-form-slo-heading",
+                    "application-edit-inbound-saml-form-enable-slo",
+                    "application-edit-inbound-saml-form-slo-logout-method",
+                    "application-edit-inbound-saml-form-slo-logout-response-url",
+                    "application-edit-inbound-saml-form-slo-logout-request-url",
+                    "application-edit-inbound-saml-form-idp-initiated-slo-heading",
+                    "application-edit-inbound-saml-form-enable-idp-initiated-slo",
+                    "application-edit-inbound-saml-form-slo-return-to-urls",
+                    "application-edit-inbound-saml-form-assertion-query-profile",
+                    "application-edit-inbound-saml-form-attribute-name-format"
+                ]
+            },
+            {
+                "id": "user-attributes",
+                "hiddenComponents": [
+                    "application-edit-user-attributes-linked-accounts",
+                    "application-edit-user-attributes--validate-linked-local-accounts",
+                    "application-edit-user-attributes-include-tenant-domain",
+                    "application-edit-user-attributes-include-user-domain"
+                ]
+            },
+            {
+                "id": "sign-in-method"
+            },
+            {
+                "id": "shared-access"
+            }
+        ],
+        "defaultActiveTabId": "quick-start"
+    }
+}

@@ -1,0 +1,129 @@
+{
+    "payload": {
+        "name": "Slack",
+        "advancedConfigurations": {
+            "discoverableByEndUsers": true,
+            "skipLogoutConsent": true
+        },
+        "imageUrl": "${clientOrigin}/${appBaseNameWithoutTenant}/resources/applications/assets/images/illustrations/slack.png",
+        "accessUrl": "${serverOrigin}/t/${tenantDomain}/samlsso?spEntityID=${inboundProtocolConfiguration.saml.manualConfiguration.issuer}",
+        "authenticationSequence": {
+            "type": "DEFAULT",
+            "steps": [
+                {
+                    "id": 1,
+                    "options": [
+                        {
+                            "idp": "LOCAL",
+                            "authenticator": "basic"
+                        }
+                    ]
+                }
+            ]
+        },
+        "claimConfiguration": {
+            "dialect": "CUSTOM",
+            "claimMappings": [
+                {
+                    "applicationClaim": "http://wso2.org/claims/userid",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/userid"
+                    }
+                },
+                {
+                    "applicationClaim": "User.Email",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/emailaddress"
+                    }
+                },
+                {
+                    "applicationClaim": "User.Username",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/username"
+                    }
+                },
+                {
+                    "applicationClaim": "first_name",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/givenname"
+                    }
+                },
+                {
+                    "applicationClaim": "last_name",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/lastname"
+                    }
+                }
+            ],
+            "requestedClaims": [
+                {
+                    "claim": {
+                        "uri": "User.Email"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "User.Username"
+                    },
+                    "mandatory": false
+                },
+                {
+                    "claim": {
+                        "uri": "first_name"
+                    },
+                    "mandatory": false
+                },
+                {
+                    "claim": {
+                        "uri": "last_name"
+                    },
+                    "mandatory": false
+                }
+            ],
+            "subject": {
+                "claim": {
+                    "uri": "http://wso2.org/claims/userid"
+                },
+                "includeUserDomain": false,
+                "includeTenantDomain": false,
+                "useMappedLocalSubject": false,
+                "mappedLocalSubjectMandatory": false
+            }
+        },
+        "inboundProtocolConfiguration": {
+            "saml": {
+                "manualConfiguration": {
+                    "issuer": "https://slack.com",
+                    "assertionConsumerUrls": [
+                        "https://${domainName}.slack.com/sso/saml"
+                    ],
+                    "defaultAssertionConsumerUrl": "${inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]}",
+                    "attributeProfile": {
+                        "enabled": true,
+                        "alwaysIncludeAttributesInResponse": true
+                    },
+                    "responseSigning": {
+                        "enabled": true,
+                        "signingAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+                    },
+                    "singleSignOnProfile": {
+                        "enableIdpInitiatedSingleSignOn": true,
+                        "assertion": {
+                            "nameIdFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+                            "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
+                            "encryption": {
+                                "assertionEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+                                "keyEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+                            }
+                        },
+                        "bindings": [ "HTTP_POST" ]
+                    },
+                    "singleLogoutProfile": {
+                        "enabled": false
+                    }
+                }
+            }
+        }
+    }
+}

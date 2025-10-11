@@ -1,0 +1,33 @@
+{
+    "id": "mobile-application",
+    "version": "1.0.0",
+    "name": "Mobile Application",
+    "description": "Applications developed to target mobile devices.",
+    "image": "${CONSOLE_BASE_URL}/resources/applications/assets/images/illustrations/mobile-template.svg",
+    "displayOrder": 2,
+    "category": "DEFAULT",
+    "tags": [
+        "Default",
+        "OIDC"
+    ],
+    "type": "applications",
+    "customAttributes": [
+        {
+            "key": "supportedTechnologies",
+            "value": [
+                {
+                    "displayName": "Android",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/android-logo.svg"
+                },
+                {
+                    "displayName": "IOS",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/ios-logo.svg"
+                },
+                {
+                    "displayName": "Flutter",
+                    "logo": "${CONSOLE_BASE_URL}/resources/applications/assets/images/technologies/flutter-logo.svg"
+                }
+            ]
+        }
+    ]
+}

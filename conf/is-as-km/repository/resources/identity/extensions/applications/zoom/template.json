@@ -1,0 +1,112 @@
+{
+    "payload": {
+        "name": "Zoom",
+        "advancedConfigurations": {
+            "discoverableByEndUsers": true,
+            "skipLogoutConsent": true
+        },
+        "imageUrl": "${clientOrigin}/${appBaseNameWithoutTenant}/resources/applications/assets/images/illustrations/zoom.svg",
+        "accessUrl": "${serverOrigin}/t/${tenantDomain}/samlsso?spEntityID=${inboundProtocolConfiguration.saml.manualConfiguration.issuer}",
+        "authenticationSequence": {
+            "type": "DEFAULT",
+            "steps": [
+                {
+                    "id": 1,
+                    "options": [
+                        {
+                            "idp": "LOCAL",
+                            "authenticator": "basic"
+                        }
+                    ]
+                }
+            ]
+        },
+        "claimConfiguration": {
+            "dialect": "CUSTOM",
+            "claimMappings": [
+                {
+                    "applicationClaim": "urn:oid:0.9.2342.19200300.100.1.3",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/emailaddress"
+                    }
+                },
+                {
+                    "applicationClaim": "urn:oid:2.5.4.42",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/givenname"
+                    }
+                },
+                {
+                    "applicationClaim": "urn:oid:2.5.4.4",
+                    "localClaim": {
+                        "uri": "http://wso2.org/claims/lastname"
+                    }
+                }
+            ],
+            "requestedClaims": [
+                {
+                    "claim": {
+                        "uri": "urn:oid:2.5.4.42"
+                    },
+                    "mandatory": false
+                },
+                {
+                    "claim": {
+                        "uri": "urn:oid:2.5.4.4"
+                    },
+                    "mandatory": false
+                }
+            ],
+            "subject": {
+                "claim": {
+                    "uri": "urn:oid:0.9.2342.19200300.100.1.3"
+                },
+                "includeUserDomain": false,
+                "includeTenantDomain": false,
+                "useMappedLocalSubject": false,
+                "mappedLocalSubjectMandatory": false
+            }
+        },
+        "inboundProtocolConfiguration": {
+            "saml": {
+                "manualConfiguration": {
+                    "issuer": "${domainName}.zoom.us",
+                    "assertionConsumerUrls": [
+                        "https://${domainName}.zoom.us/saml/SSO"
+                    ],
+                    "defaultAssertionConsumerUrl": "${inboundProtocolConfiguration.saml.manualConfiguration.assertionConsumerUrls.[0]}",
+                    "attributeProfile": {
+                        "enabled": true,
+                        "alwaysIncludeAttributesInResponse": true
+                    },
+                    "responseSigning": {
+                        "enabled": true,
+                        "signingAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+                    },
+                    "singleSignOnProfile": {
+                        "enableIdpInitiatedSingleSignOn": true,
+                        "assertion": {
+                            "nameIdFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+                            "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
+                            "encryption": {
+                                "assertionEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+                                "keyEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+                            }
+                        },
+                        "bindings": [ "HTTP_POST", "HTTP_REDIRECT" ]
+                    },
+                    "singleLogoutProfile": {
+                        "enabled": true,
+                        "logoutRequestUrl": "https://${domainName}.zoom.us/saml/SingleLogout",
+                        "logoutResponseUrl": "https://${domainName}.zoom.us/saml/SingleLogout",
+                        "logoutMethod": "FRONTCHANNEL_HTTP_POST",
+                        "idpInitiatedSingleLogout": {
+                            "enabled": true,
+                            "returnToUrls": [ "https://${domainName}.zoom.us" ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
