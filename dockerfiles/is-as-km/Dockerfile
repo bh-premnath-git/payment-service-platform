@@ -21,10 +21,13 @@ FROM wso2/wso2is:7.1.0-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
 
 ARG MYSQL_CONNECTOR_VERSION=8.0.32
+# the MySQL JDBC driver is now published under the com.mysql group as mysql-connector-j
+ARG MYSQL_CONNECTOR_GROUP_PATH=com/mysql
+ARG MYSQL_CONNECTOR_ARTIFACT=mysql-connector-j
 # copy extensions to the identity server home
 COPY dropins ${WSO2_SERVER_HOME}/repository/components/dropins/
 # copy customized webapps to the identity server home
 COPY webapps ${WSO2_SERVER_HOME}/repository/deployment/server/webapps/
 
 # add MySQL JDBC connector to server home as a third party library
-ADD --chown=wso2carbon:wso2 https://repo1.maven.org/maven2/mysql/mysql-connector-java/${MYSQL_CONNECTOR_VERSION}/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}.jar ${WSO2_SERVER_HOME}/repository/components/lib/
+ADD --chown=wso2carbon:wso2 https://repo1.maven.org/maven2/${MYSQL_CONNECTOR_GROUP_PATH}/${MYSQL_CONNECTOR_ARTIFACT}/${MYSQL_CONNECTOR_VERSION}/${MYSQL_CONNECTOR_ARTIFACT}-${MYSQL_CONNECTOR_VERSION}.jar ${WSO2_SERVER_HOME}/repository/components/lib/
