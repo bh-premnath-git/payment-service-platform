@@ -6,34 +6,39 @@ x-extra-hosts: &extra_hosts
   - "host.docker.internal:host-gateway"
 
 x-db-deploy: &db_deploy
-  resources:
-    limits:
-      cpus: "2.00"
-      memory: 2G
+  deploy:
+    resources:
+      limits:
+        cpus: "2.00"
+        memory: 2G
 
 x-support-deploy: &support_deploy
-  resources:
-    limits:
-      cpus: "1.00"
-      memory: 1G
+  deploy:
+    resources:
+      limits:
+        cpus: "1.00"
+        memory: 1G
 
 x-light_deploy: &light_deploy
-  resources:
-    limits:
-      cpus: "0.25"
-      memory: 256M
+  deploy:
+    resources:
+      limits:
+        cpus: "0.25"
+        memory: 256M
 
 x-default_deploy: &default_deploy
-  resources:
-    limits:
-      cpus: "0.50"
-      memory: 512M
+  deploy:
+    resources:
+      limits:
+        cpus: "0.50"
+        memory: 512M
 
 x-worker_deploy: &worker_deploy
-  resources:
-    limits:
-      cpus: "0.75"
-      memory: 768M
+  deploy:
+    resources:
+      limits:
+        cpus: "0.75"
+        memory: 768M
 
 networks:
   edge:
