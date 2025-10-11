@@ -57,8 +57,7 @@ cascadingly, so resolving the datasource mapping fixes the downstream errors (e.
    FLUSH PRIVILEGES;
    ```
 2. **Point datasources to the correct schemas** – Update `<IS_HOME>/repository/conf/deployment.toml` so each datasource
-   references the matching schema (note that Identity Server still uses `database.shared_db` for the primary user store by
-   default):
+   references the matching schema:
    ```toml
    [database.identity_db]
    type = "mysql"
@@ -66,7 +65,7 @@ cascadingly, so resolving the datasource mapping fixes the downstream errors (e.
    username = "wso2carbon"
    password = "<DB_PASSWORD>"
 
-   [database.shared_db]
+   [database.user]
    type = "mysql"
    url = "jdbc:mysql://<mysql-host>:3306/WSO2IS_UM_DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
    username = "wso2carbon"
@@ -78,7 +77,6 @@ cascadingly, so resolving the datasource mapping fixes the downstream errors (e.
    username = "wso2carbon"
    password = "<DB_PASSWORD>"
    ```
-   If you override the realm manager or user store blocks, point them at the same `WSO2IS_UM_DB` datasource.
    Only use a `*_SHARED_DB` schema when you have a specific requirement for one.
 3. **Load the IS schema DDL** – From the product pack, execute the scripts against the corresponding databases:
    ```bash
