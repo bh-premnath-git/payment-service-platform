@@ -82,9 +82,6 @@ services:
       nofile:
         soft: 20000
         hard: 40000
-    # Disable TLS by following the new MySQL recommendation instead of the
-    # deprecated --ssl=off flag to avoid startup warnings.
-    command: ["--tls-version="]
     healthcheck:
       test: ["CMD", "sh", "-c", "mysqladmin ping -uroot -p${MYSQL_ROOT_PASSWORD} && [ -f /var/lib/mysql/initialization-complete.flag ]"]
       interval: 30s
