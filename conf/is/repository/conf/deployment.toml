@@ -2,6 +2,8 @@
 hostname = "wso2is"
 node_ip = "127.0.0.1"
 base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+locale = "en-US"
+timezone = "GMT"
 
 [super_admin]
 username = "admin"
@@ -87,15 +89,6 @@ custom_servlets = []
 dispatch = []
 custom_dispatch = []
 ignore_dispatch_path = []
-
-# Cache Configuration
-[cache.manager]
-timeout = 300
-capacity = 5000
-
-[authentication.framework.cache]
-session_data_cache.timeout = 300
-session_data_cache.capacity = 5000
 
 # JWT Configuration
 [oauth.token_generation.jwt]
