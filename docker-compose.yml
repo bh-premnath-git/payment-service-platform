@@ -22,7 +22,7 @@ services:
   is-as-km:
     build: ./dockerfiles/is-as-km
     healthcheck:
-      test: ["CMD", "curl", "--fail", "https://localhost:9444/api/health-check/v1.0/health"]
+      test: ["CMD", "curl", "-k", "--fail", "https://localhost:9444/carbon/admin/login.jsp"]
       interval: 10s
       start_period: 180s
       retries: 20

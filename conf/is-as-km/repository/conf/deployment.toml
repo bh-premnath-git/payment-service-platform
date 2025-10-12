@@ -80,6 +80,7 @@ id = "token_revocation"
 type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
 name = "org.wso2.is.notification.ApimOauthEventInterceptor"
 order = 1
+enable = true
 
 [event_listener.properties]
 notification_endpoint = "https://api-manager:9443/internal/data/v1/notify"
@@ -147,3 +148,15 @@ internal_crypto_provider = "org.wso2.carbon.crypto.provider.KeyStoreBasedInterna
 
 [authorization_manager.properties]
 GroupAndRoleSeparationEnabled = false
+
+# Cache configurations to prevent NumberFormatException
+[cache.manager]
+timeout = 300
+capacity = 5000
+
+[authentication.framework.cache]
+session_data_cache.timeout = 300
+session_data_cache.capacity = 5000
+
+[tenant_mgt]
+enable_email_domain = false
