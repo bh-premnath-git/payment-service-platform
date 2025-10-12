@@ -87,6 +87,129 @@ username = "${admin.username}"
 password = "${admin.password}"
 'header.X-WSO2-KEY-MANAGER' = "WSO2-IS"
 
+[event.default_listener.validation]
+priority = 10
+enable = true
+
+[event.default_listener.workflow]
+priority = 100
+enable = false
+
+[event.default_listener.identity_mgt]
+priority = 50
+enable = true
+
+[event.default_listener.scim]
+priority = 90
+enable = false
+
+[event.default_listener.scim_tenant_mgt]
+priority = 90
+enable = false
+
+[event.default_listener.scim2]
+priority = 93
+enable = true
+
+[event.default_listener.scim2_tenant_mgt]
+priority = 93
+enable = true
+
+[event.default_listener.governance_identity_mgt]
+priority = 95
+enable = true
+
+[event.default_listener.governance_identity_store]
+priority = 97
+enable = true
+data_store = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
+enable_hybrid_data_store = false
+
+[event.default_listener.application_authentication]
+priority = 11
+enable = false
+
+[event.default_listener.oauth_listener]
+priority = 11
+enable = true
+
+[event.default_listener.mutual_tls_authenticator]
+priority = 501
+enable = true
+
+[event.default_listener.basic_auth_client_authenticator]
+priority = 5
+enable = true
+
+[event.default_listener.user_deletion]
+priority = 98
+enable = true
+
+[event.default_listener.consent_mgt_handler]
+priority = 100
+enable = true
+
+[event.default_listener.user_session_termination]
+priority = 98
+enable = true
+
+[event.default_listener.jit_provisioning_handler]
+priority = 100
+enable = true
+
+[event.default_listener.post_auth_association_handler]
+priority = 10
+enable = true
+
+[event.default_listener.subject_identifier_handler]
+priority = 100
+enable = true
+
+[event.default_listener.failed_lockout_count_handler]
+priority = 100
+enable = true
+
+[event.default_listener.username_resolver]
+priority = 4
+enable = true
+
+[event.default_listener.userid_resolver]
+priority = 5
+enable = true
+
+[event.default_listener.user_mgt_audit_logger]
+priority = 9
+enable = true
+
+[event.default_listener.user_management_audit_logger]
+priority = 14
+enable = true
+
+[event.default_listener.user_failure_audit_logger]
+priority = 12
+enable = true
+
+[event.default_listener.unique_claim_user_operation_event_listener]
+priority = 20
+enable = false
+
+[event.default_listener.user_claim_audit_logger]
+priority = 9
+enable = true
+LogUpdatedClaimsOnly = true
+
+[event.default_listener.client_certificate_authentication_handler]
+priority = 250
+enable = true
+
+[event.default_listener.is_introspection_data_provider]
+priority = 503
+enable = true
+
+[event.default_listener.outbound_provisioning_error_handler]
+priority = 20
+enable = true
+
 [[resource.access_control]]
 context = "(.)/keymanager-operations/user-info/claims(.)"
 secure = true
@@ -144,6 +267,57 @@ custom_webapps = ["/keymanager-operations/"]
 
 [encryption]
 internal_crypto_provider = "org.wso2.carbon.crypto.provider.KeyStoreBasedInternalCryptoProvider"
+
+[identity_mgt.notification]
+resolve_notification_channel = true
+default_locale = "en_US"
+
+[identity_mgt.user_onboarding]
+enable_email_verification = false
+verification_email_validity = 1440
+lock_on_creation = true
+ask_password_email_validity = 1440
+ask_password_account_activation = true
+password_generator = "org.wso2.carbon.user.mgt.common.DefaultPasswordGenerator"
+disable_random_value_for_credentials = false
+
+[identity_mgt.user_onboarding.notification]
+manage_internally = true
+
+[identity_mgt.tenant_registration]
+ask_password_email_validity = 1440
+
+[identity_mgt.user_self_registration]
+allow_self_registration = true
+enable_account_lock_for_verified_preferred_channel = false
+enable_detailed_api_response = false
+
+[saml]
+response.validity = 5
+enable_user_domain_crpto = false
+signing_alg = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+digest_alg = "http://www.w3.org/2001/04/xmlenc#sha256"
+assertion_encryption_alg = "http://www.w3.org/2001/04/xmlenc#aes256-cbc"
+key_encryption_alg = "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+artifact.validity = 4
+metadata.validity_period = 60
+metadata.enable_signing = false
+enable_request_validity_period = false
+slo.host_name_verification = true
+
+[saml.endpoints]
+ecp = "${carbon.protocol}://${carbon.host}:${carbon.management.port}/samlecp"
+
+[saml.extensions]
+assertion_builder = "org.wso2.carbon.identity.sso.saml.builders.assertion.DefaultSAMLAssertionBuilder"
+encrypter = "org.wso2.carbon.identity.sso.saml.builders.encryption.DefaultSSOEncrypter"
+signer = "org.wso2.carbon.identity.sso.saml.builders.signature.DefaultSSOSigner"
+redirect_signature_validator = "org.wso2.carbon.identity.sso.saml.validators.SAML2HTTPRedirectDeflateSignatureValidator"
+response_builder = "org.wso2.carbon.identity.sso.saml.builders.DefaultResponseBuilder"
+
+[outbound_provisioning_management]
+reset_provisioning_entities_on_config_update = true
+use_user_tenant_domain_in_saas_apps = false
 
 [authorization_manager.properties]
 GroupAndRoleSeparationEnabled = false
