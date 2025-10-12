@@ -1,0 +1,108 @@
+[server]
+hostname = "wso2is"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[user_store]
+type = "database_unique_id"
+
+# PostgreSQL Configuration for Identity Database
+[database.identity_db]
+type = "postgre"
+url = "jdbc:postgresql://postgres:5432/wso2is_db"
+username = "wso2user"
+password = "wso2pass"
+driver = "org.postgresql.Driver"
+
+[database.identity_db.pool_options]
+maxActive = 50
+maxWait = 60000
+minIdle = 5
+testOnBorrow = true
+validationQuery = "SELECT 1"
+validationInterval = 30000
+
+# PostgreSQL Configuration for Shared Database
+[database.shared_db]
+type = "postgre"
+url = "jdbc:postgresql://postgres:5432/wso2shared_db"
+username = "wso2user"
+password = "wso2pass"
+driver = "org.postgresql.Driver"
+
+[database.shared_db.pool_options]
+maxActive = 50
+maxWait = 60000
+minIdle = 5
+testOnBorrow = true
+validationQuery = "SELECT 1"
+validationInterval = 30000
+
+# OAuth Configuration
+[oauth.token_validation]
+app_access_token_validity = 3600
+user_access_token_validity = 3600
+refresh_token_validity = 86400
+
+[oauth.token_generation]
+include_username_in_access_token = true
+access_token_type = "default"
+
+# CORS Configuration for API calls
+[cors]
+allow_generic_http_requests = true
+allow_any_origin = false
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:8000"
+]
+allow_subdomains = false
+supported_methods = [
+    "GET",
+    "POST",
+    "HEAD",
+    "OPTIONS",
+    "PUT",
+    "DELETE",
+    "PATCH"
+]
+support_any_header = true
+exposed_headers = ["Location"]
+supports_credentials = true
+max_age = 3600
+
+# Tenant Configuration
+[tenant_context.rewrite]
+custom_webapps = []
+webapps = []
+servlets = []
+custom_servlets = []
+
+[tenant_context.rewrite.overwrite]
+dispatch = []
+custom_dispatch = []
+ignore_dispatch_path = []
+
+# Cache Configuration
+[cache.manager]
+timeout = 300
+capacity = 5000
+
+[authentication.framework.cache]
+session_data_cache.timeout = 300
+session_data_cache.capacity = 5000
+
+# JWT Configuration
+[oauth.token_generation.jwt]
+enable = true
+header = "X-JWT-Assertion"
+claims_extractor_impl = "org.wso2.carbon.apimgt.impl.token.ExtendedDefaultClaimsRetriever"
+
+# Session Configuration
+[session]
+idle_timeout = 600
+remember_me_session_timeout = 86400

@@ -1,53 +1,90 @@
 services:
-  mysql:
-    image: mysql:8.0.36
-    ports:
-      - 3306
+  postgres:
+    image: postgres:16.10-alpine3.21
+    container_name: postgres-wso2
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
     volumes:
-      - ./conf/mysql/scripts:/docker-entrypoint-initdb.d
-      - ./conf/mysql/conf/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
-    ulimits:
-      nofile:
-        soft: 20000
-        hard: 40000
-    command: [--ssl=0]
-    healthcheck:
-      test: ["CMD", "sh", "-c", "mysqladmin ping -uroot -proot && [ -f /var/lib/mysql/initialization-complete.flag ]"]
-      interval: 30s
-      timeout: 60s
-      retries: 5
-      start_period: 80s
-  is-as-km:
-    build: ./dockerfiles/is-as-km
-    healthcheck:
-      test: ["CMD", "curl", "-k", "--fail", "https://localhost:9444/carbon/admin/login.jsp"]
-      interval: 10s
-      start_period: 180s
-      retries: 20
-    depends_on:
-      mysql:
-        condition: service_healthy
-    volumes:
-      - ./conf/is-as-km:/home/wso2carbon/wso2-config-volume
+      - ./conf/postgres/scripts:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
     ports:
-      - "9444:9444"
-  api-manager:
-    build: ./dockerfiles/apim
+      - "5432:5432"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:9763/services/Version"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
-      start_period: 180s
-      retries: 20
+      timeout: 5s
+      retries: 5
+    networks:
+      - wso2-network
+
+  wso2is:
+    image: wso2/wso2is:7.1.0-alpine
+    container_name: wso2is
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
-      is-as-km:
-        condition: service_healthy
+    environment:
+      JAVA_OPTS: "-Xms512m -Xmx2048m"
     volumes:
-      - ./conf/apim:/home/wso2carbon/wso2-config-volume
+      - ./conf/is/repository/conf/deployment.toml:/home/wso2carbon/wso2is-7.1.0/repository/conf/deployment.toml
+      - ./dockerfiles/is/postgres-connector:/home/wso2carbon/wso2is-7.1.0/repository/components/lib/
     ports:
       - "9443:9443"
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--fail", "https://localhost:9443/api/health-check/v1.0/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    networks:
+      - wso2-network
+
+  wso2apim:
+    image: wso2/wso2am:4.5.0-alpine
+    container_name: wso2apim
+    depends_on:
+      postgres:
+        condition: service_healthy
+      wso2is:
+        condition: service_healthy
+    environment:
+      JAVA_OPTS: "-Xms512m -Xmx2048m"
+    volumes:
+      - ./conf/apim/repository/conf/deployment.toml:/home/wso2carbon/wso2am-4.5.0/repository/conf/deployment.toml
+      - ./dockerfiles/apim/postgres-connector:/home/wso2carbon/wso2am-4.5.0/repository/components/lib/
+    ports:
+      - "9444:9443"
       - "8280:8280"
       - "8243:8243"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:9763/services/Version"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    networks:
+      - wso2-network
+
+  # Python microservice example
+  payment-api:
+    build: ./services/payment-service
+    container_name: payment-api
+    environment:
+      DATABASE_URL: "postgresql://wso2user:wso2pass@postgres:5432/wso2am_db"
+      OAUTH_ISSUER: "https://wso2is:9443/oauth2/token"
+      OAUTH_JWKS_URL: "https://wso2is:9443/oauth2/jwks"
+    ports:
+      - "8000:8000"
+    depends_on:
+      wso2is:
+        condition: service_healthy
+    networks:
+      - wso2-network
+
+networks:
+  wso2-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
