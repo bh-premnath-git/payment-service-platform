@@ -1,0 +1,135 @@
+x-svc-env: &svc_env
+  env_file:
+    - .env
+
+x-extra-hosts: &extra_hosts
+  - "host.docker.internal:host-gateway"
+
+x-db-deploy: &db_deploy
+  deploy:
+    resources:
+      limits:
+        cpus: "2.00"
+        memory: 2G
+
+x-support-deploy: &support_deploy
+  deploy:
+    resources:
+      limits:
+        cpus: "1.00"
+        memory: 1G
+
+x-light_deploy: &light_deploy
+  deploy:
+    resources:
+      limits:
+        cpus: "0.25"
+        memory: 256M
+
+networks:
+  edge:
+    driver: bridge
+
+volumes:
+  mkcert-certs:
+    driver: local
+
+services:
+  mkcert:
+    <<: [*light_deploy, *svc_env]
+    build:
+      context: ./dockerfiles/mkcert
+    environment:
+      MKCERT_HOSTNAMES: ${MKCERT_HOSTNAMES}
+      MKCERT_EXPORT_PKCS12: ${MKCERT_EXPORT_PKCS12}
+      MKCERT_PKCS12_PASSWORD: ${MKCERT_PKCS12_PASSWORD}
+    volumes:
+      - mkcert-certs:/certs
+    networks:
+      - edge
+
+  mysql:
+    <<: *svc_env
+    image: ${MYSQL_IMAGE}
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ./conf/mysql/scripts:/docker-entrypoint-initdb.d
+      - ./conf/mysql/conf/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
+      - mkcert-certs:/certs:ro
+    depends_on:
+      mkcert:
+        condition: service_started
+    networks:
+      - edge
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+    healthcheck:
+      test: [
+        "CMD",
+        "sh",
+        "-c",
+        "MYSQL_PWD='${MYSQL_ROOT_PASSWORD}' mysqladmin ping -uroot --silent && [ -f /var/lib/mysql/initialization-complete.flag ]"
+      ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  is-as-km:
+    <<: [*support_deploy, *svc_env]
+    build:
+      context: ./dockerfiles/is-as-km
+      args:
+        MYSQL_CONNECTOR_VERSION: ${MYSQL_CONNECTOR_VERSION}
+    command: ["/home/wso2carbon/setup-and-start.sh"]
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "https://localhost:9444/api/health-check/v1.0/health"]
+      interval: 10s
+      start_period: 180s
+      retries: 20
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mkcert:
+        condition: service_started
+    volumes:
+      - ./conf/is-as-km:/home/wso2carbon/wso2-config-volume
+      - mkcert-certs:/certs:ro
+    ports:
+      - "${ISKM_HTTPS_PORT}:${ISKM_HTTPS_PORT}"
+    networks:
+      - edge
+
+  api-manager:
+    <<: [*support_deploy, *svc_env]
+    build:
+      context: ./dockerfiles/apim
+      args:
+        MYSQL_CONNECTOR_VERSION: ${MYSQL_CONNECTOR_VERSION}
+    command: ["/home/wso2carbon/setup-and-start.sh"]
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:9763/services/Version"]
+      interval: 10s
+      start_period: 180s
+      retries: 20
+    depends_on:
+      mysql:
+        condition: service_healthy
+      is-as-km:
+        condition: service_healthy
+      mkcert:
+        condition: service_started
+    volumes:
+      - ./conf/apim:/home/wso2carbon/wso2-config-volume
+      - mkcert-certs:/certs:ro
+    ports:
+      - "${APIM_HTTPS_PORT}:9443"
+      - "${APIM_GATEWAY_HTTP_PORT}:8280"
+      - "${APIM_GATEWAY_HTTPS_PORT}:8243"
+    networks:
+      - edge
