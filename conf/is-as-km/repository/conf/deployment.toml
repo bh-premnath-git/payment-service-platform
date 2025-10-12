@@ -123,7 +123,7 @@ enable = true
 priority = 97
 enable = true
 data_store = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
-enable_hybrid_data_store = false
+enableHybridDataStore = false
 
 [event.default_listener.application_authentication]
 priority = 11
@@ -220,7 +220,7 @@ internal_crypto_provider = "org.wso2.carbon.crypto.provider.KeyStoreBasedInterna
 
 # Identity data store configuration
 [identity_data_store]
-store_class_name = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
+storeClassName = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
 
 [identity_mgt.notification]
 resolve_notification_channel = true

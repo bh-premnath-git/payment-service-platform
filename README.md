@@ -162,6 +162,48 @@ docker compose logs is-as-km | grep "Unknown column"
 docker compose logs is-as-km | grep "doesn't exist"
 ```
 
+#### Identity Server throws `storeClassName` `NullPointerException`
+
+If the Identity Server log stream stops with the following stack trace, the
+`identity_data_store` configuration block has not been picked up when rendering
+`identity.xml`:
+
+```
+java.lang.NullPointerException: Cannot invoke "String.trim()" because "storeClassName" is null
+    at org.wso2.carbon.identity.governance.service.IdentityDataStoreServiceImpl.<init>(IdentityDataStoreServiceImpl.java:63)
+```
+
+This repository ships the full set of default event listeners together with the
+Identity data-store definition so the product templates always receive a value
+for `storeClassName`. Confirm that the mounted `deployment.toml` still contains
+the `[identity_data_store]` stanza after any manual edits; it must reference the
+JDBC-backed store shipped with WSO2 IS and the governance listeners must remain
+enabled to wire the same class during bootstrap.【F:conf/is-as-km/repository/conf/deployment.toml†L90-L199】【F:conf/is-as-km/repository/conf/deployment.toml†L221-L279】
+
+After restoring the section rebuild the image so the Carbon home inside the
+container is refreshed:
+
+```bash
+docker compose build is-as-km
+docker compose up -d is-as-km
+```
+
+#### "Error while registering system API resources" repeats on startup
+
+This message means the API Manager schema is missing the columns introduced with
+WSO2 IS 7.1.0 (notably `API_RESOURCE.CURSOR_KEY`). Run the bundled verification
+script to confirm the database layout and apply the migration scripts if the
+checks fail.【F:scripts/verify-schema.sh†L1-L160】
+
+```bash
+bash scripts/verify-schema.sh
+```
+
+The script inspects the MySQL schema used by the Identity Server and reports any
+missing columns or tables. If a column is missing, reapply the SQL scripts in
+`conf/mysql/migrations/` and rerun the verification before starting the
+containers again.【F:conf/mysql/migrations/fix_idp_authenticator_schema.sql†L1-L27】【F:conf/mysql/migrations/fix_registry_column_size.sql†L1-L19】
+
 #### Service won't start
 ```bash
 # Restart specific service
