@@ -268,9 +268,9 @@ custom_webapps = ["/keymanager-operations/"]
 [encryption]
 internal_crypto_provider = "org.wso2.carbon.crypto.provider.KeyStoreBasedInternalCryptoProvider"
 
-# NOTE: identity_mgt.data_store is NOT in WSO2 IS 7.1.0 default config
-# The service uses a working default value automatically
-# Removed to prevent NullPointerException
+# Fix identity data store with correct property name
+[identity_data_store]
+store_class_name = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
 
 [identity_mgt.notification]
 resolve_notification_channel = true
@@ -337,3 +337,12 @@ GroupAndRoleSeparationEnabled = false
 
 [extension_manager]
 enable = true
+
+# SCIM2 configuration for system roles
+[scim2]
+enable_internal_everyone_role = true
+enable_internal_system_role = true
+
+# OAuth response modes configuration
+[oauth.response_modes]
+supported_response_modes = ["query", "fragment", "form_post"]
