@@ -268,6 +268,9 @@ custom_webapps = ["/keymanager-operations/"]
 [encryption]
 internal_crypto_provider = "org.wso2.carbon.crypto.provider.KeyStoreBasedInternalCryptoProvider"
 
+[identity_mgt]
+data_store.class_name = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
+
 [identity_mgt.notification]
 resolve_notification_channel = true
 default_locale = "en_US"
@@ -321,3 +324,6 @@ use_user_tenant_domain_in_saas_apps = false
 
 [authorization_manager.properties]
 GroupAndRoleSeparationEnabled = false
+
+[extension_manager]
+enable = true
