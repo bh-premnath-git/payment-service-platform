@@ -88,10 +88,11 @@ services:
         MYSQL_CONNECTOR_VERSION: ${MYSQL_CONNECTOR_VERSION}
     command: ["/home/wso2carbon/setup-and-start.sh"]
     healthcheck:
-      test: ["CMD", "curl", "--fail", "https://localhost:9444/api/health-check/v1.0/health"]
-      interval: 10s
-      start_period: 180s
-      retries: 20
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9444/scim2/ServiceProviderConfig"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
     depends_on:
       mysql:
         condition: service_healthy

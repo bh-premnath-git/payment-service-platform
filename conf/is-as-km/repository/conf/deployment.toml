@@ -296,6 +296,15 @@ allow_self_registration = true
 enable_account_lock_for_verified_preferred_channel = false
 enable_detailed_api_response = false
 
+# Disable password validation for internal/system users created by Key Manager
+# The Key Manager extension creates users with passwords that don't meet default policy
+[identity_mgt.password_validation]
+enable = false
+
+[identity_mgt.password_policy_properties]
+min_length = 6
+max_length = 50
+
 [saml]
 response.validity = 5
 enable_user_domain_crpto = false
