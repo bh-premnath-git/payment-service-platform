@@ -210,57 +210,7 @@ enable = true
 priority = 20
 enable = true
 
-[[resource.access_control]]
-context = "(.)/keymanager-operations/user-info/claims(.)"
-secure = true
-http_method = "GET"
-permissions = "/permission/admin/manage/identity/usermgt/list"
-scopes = "internal_user_mgt_list"
-
-[[resource.access_control]]
-context = "(.*)/keymanager-operations/user-info/claims/generate"
-secure = true
-http_method = "POST"
-permissions = "/permission/admin/manage/identity/usermgt/list"
-scopes = "internal_user_mgt_list"
-
-[[resource.access_control]]
-context = "(.*)/keymanager-operations/dcr/register"
-secure = true
-http_method = "POST"
-permissions = "/permission/admin/manage/identity/applicationmgt/create"
-scopes = "internal_application_mgt_create"
-
-[[resource.access_control]]
-context = "(.*)/keymanager-operations/dcr/register(.*)"
-secure = true
-http_method = "GET"
-permissions = "/permission/admin/manage/identity/applicationmgt/view"
-scopes = "internal_application_mgt_view"
-
-[[resource.access_control]]
-context = "(.*)/keymanager-operations/dcr/register(.*)"
-secure = true
-http_method = "DELETE"
-permissions = "/permission/admin/manage/identity/applicationmgt/delete"
-scopes = "internal_application_mgt_delete"
-
-[[resource.access_control]]
-context = "(.*)/keymanager-operations/dcr/register(.*)"
-secure = true
-http_method = "PUT"
-permissions = "/permission/admin/manage/identity/applicationmgt/update"
-scopes = "internal_application_mgt_update"
-
-[[resource.access_control]]
-context = "(.*)/keymanager-operations/dcr/register(.*)"
-secure = true
-http_method = "POST"
-permissions = "/permission/admin/manage/identity/applicationmgt/update"
-scopes = "internal_application_mgt_update"
-
-[tenant_context.rewrite]
-custom_webapps = ["/keymanager-operations/"]
+# Key Manager access controls removed - using standalone IS
 
 [system.parameter]
 "org.wso2.CipherTransformation" = "RSA/ECB/OAEPwithSHA1andMGF1Padding"
@@ -268,7 +218,7 @@ custom_webapps = ["/keymanager-operations/"]
 [encryption]
 internal_crypto_provider = "org.wso2.carbon.crypto.provider.KeyStoreBasedInternalCryptoProvider"
 
-# Fix identity data store with correct property name
+# Identity data store configuration
 [identity_data_store]
 store_class_name = "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore"
 
@@ -296,14 +246,7 @@ allow_self_registration = true
 enable_account_lock_for_verified_preferred_channel = false
 enable_detailed_api_response = false
 
-# Disable password validation for internal/system users created by Key Manager
-# The Key Manager extension creates users with passwords that don't meet default policy
-[identity_mgt.password_validation]
-enable = false
-
-[identity_mgt.password_policy_properties]
-min_length = 6
-max_length = 50
+# Using default password policies for standalone IS
 
 [saml]
 response.validity = 5
@@ -335,14 +278,4 @@ use_user_tenant_domain_in_saas_apps = false
 [authorization_manager.properties]
 GroupAndRoleSeparationEnabled = false
 
-[extension_manager]
-enable = true
-
-# SCIM2 configuration for system roles
-[scim2]
-enable_internal_everyone_role = true
-enable_internal_system_role = true
-
-# OAuth response modes configuration
-[oauth.response_modes]
-supported_response_modes = ["query", "fragment", "form_post"]
+# Using default extension manager and OAuth configurations
