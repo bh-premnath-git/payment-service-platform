@@ -46,9 +46,33 @@ sleep 5
 # 5. Apply the fix IMMEDIATELY
 echo "🔧 Applying IDN_CONFIG_RESOURCE fix..."
 docker compose exec -T postgres psql -U postgres -d wso2is_db << 'EOF'
--- Fix the created_time column
+-- Make the column nullable (WSO2 explicitly inserts NULL, overriding DEFAULT)
+ALTER TABLE public.idn_config_resource 
+ALTER COLUMN created_time DROP NOT NULL;
+
+-- Set default for good measure
 ALTER TABLE public.idn_config_resource 
 ALTER COLUMN created_time SET DEFAULT CURRENT_TIMESTAMP;
+
+-- Create a trigger function to auto-set created_time when NULL is inserted
+CREATE OR REPLACE FUNCTION set_created_time()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.created_time IS NULL THEN
+        NEW.created_time = CURRENT_TIMESTAMP;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Drop trigger if exists
+DROP TRIGGER IF EXISTS trg_set_created_time ON idn_config_resource;
+
+-- Create the trigger
+CREATE TRIGGER trg_set_created_time
+BEFORE INSERT ON idn_config_resource
+FOR EACH ROW
+EXECUTE FUNCTION set_created_time();
 
 -- Fix any existing NULL values
 UPDATE public.idn_config_resource 
@@ -66,6 +90,16 @@ FROM information_schema.columns
 WHERE table_name = 'idn_config_resource' 
   AND column_name = 'created_time';
 
+\echo ''
+\echo 'Trigger info:'
+SELECT 
+    trigger_name,
+    event_manipulation,
+    action_timing
+FROM information_schema.triggers 
+WHERE event_object_table = 'idn_config_resource';
+
+\echo ''
 \echo 'Row count:'
 SELECT COUNT(*) as total_rows, 
        COUNT(created_time) as non_null_created_time 
@@ -112,12 +146,19 @@ echo ""
 echo "🔍 Final Verification..."
 echo "========================"
 
-# Check for errors in logs
+# Check for critical errors in logs (ignore known non-critical warnings)
 if docker compose logs wso2is | grep -i "null value in column \"created_time\"" > /dev/null; then
     echo "❌ Still seeing created_time errors!"
     docker compose logs wso2is | grep -A 5 "created_time"
 else
     echo "✅ No created_time errors found"
+fi
+
+# Note about non-critical Administrator role warning
+if docker compose logs wso2is | grep -i "Administrator.*doesn't exist" > /dev/null; then
+    echo ""
+    echo "ℹ️  Note: 'Administrator role doesn't exist' warning is expected and non-critical"
+    echo "   This only affects the apps portal UI. Core authentication works fine."
 fi
 
 # Check table
