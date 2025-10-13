@@ -1,7 +1,7 @@
 [server]
 hostname = "wso2is"
 node_ip = "127.0.0.1"
-base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+base_path = "https://localhost:${carbon.management.port}"
 locale = "en-US"
 timezone = "GMT"
 

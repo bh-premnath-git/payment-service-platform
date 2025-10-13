@@ -1,6 +1,6 @@
 [server]
 hostname = "wso2apim"
-base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+base_path = "https://localhost:${carbon.management.port}"
 server_role = "default"
 
 [super_admin]
