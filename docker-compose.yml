@@ -32,7 +32,7 @@ services:
       TZ: "GMT"
     volumes:
       - ./conf/is/repository/conf/deployment.toml:/home/wso2carbon/wso2is-7.1.0/repository/conf/deployment.toml
-      - ./dockerfiles/is/postgres-connector:/home/wso2carbon/wso2is-7.1.0/repository/components/lib/
+      - ./dockerfiles/is/postgres-connector:/home/wso2carbon/wso2is-7.1.0/repository/components/dropins/
     ports:
       - "9443:9443"
     healthcheck:
@@ -56,7 +56,7 @@ services:
       JAVA_OPTS: "-Xms512m -Xmx2048m -Dsetup"
     volumes:
       - ./conf/apim/repository/conf/deployment.toml:/home/wso2carbon/wso2am-4.5.0/repository/conf/deployment.toml
-      - ./dockerfiles/apim/postgres-connector:/home/wso2carbon/wso2am-4.5.0/repository/components/lib/
+      - ./dockerfiles/apim/postgres-connector:/home/wso2carbon/wso2am-4.5.0/repository/components/dropins/
     ports:
       - "9444:9443"
       - "8280:8280"
