@@ -45,7 +45,7 @@ services:
       - wso2-network
 
   wso2apim:
-    image: wso2/wso2am:4.5.0-alpine
+    image: wso2/wso2am:4.5.0
     container_name: wso2apim
     depends_on:
       postgres:

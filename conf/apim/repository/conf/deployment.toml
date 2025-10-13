@@ -59,6 +59,10 @@ testOnBorrow = true
 validationQuery = "SELECT 1"
 validationInterval = 30000
 
+# Disable Consent Management (missing scripts in this version)
+[consent_mgt]
+enable = false
+
 # Keystore Configuration
 [keystore.tls]
 file_name = "wso2carbon.jks"
