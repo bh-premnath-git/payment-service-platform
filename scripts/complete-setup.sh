@@ -87,7 +87,15 @@ docker compose restart wso2is
 echo "⏳ Waiting for WSO2 IS to start..."
 sleep 60
 
-# 8. Initialize other databases
+# 8. Start WSO2 APIM (needed to extract database scripts)
+echo "🚀 Starting WSO2 APIM..."
+docker compose up -d wso2apim
+
+# Wait for APIM to start
+echo "⏳ Waiting for WSO2 APIM to start..."
+sleep 30
+
+# 9. Initialize APIM databases
 echo "📊 Initializing WSO2 APIM databases..."
 if [ -f "./scripts/init-wso2-databases.sh" ]; then
     ./scripts/init-wso2-databases.sh
@@ -95,11 +103,11 @@ else
     echo "⚠️  init-wso2-databases.sh not found, skipping"
 fi
 
-# 9. Start remaining services
-echo "🚀 Starting WSO2 APIM and other services..."
+# 10. Start remaining services
+echo "🚀 Starting remaining services..."
 docker compose up -d
 
-# 10. Final verification
+# 11. Final verification
 echo ""
 echo "🔍 Final Verification..."
 echo "========================"

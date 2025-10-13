@@ -43,6 +43,22 @@ testOnBorrow = true
 validationQuery = "SELECT 1"
 validationInterval = 30000
 
+# Consent Management Database - uses shared_db
+[database.config]
+type = "postgre"
+url = "jdbc:postgresql://postgres:5432/wso2shared_db"
+username = "wso2user"
+password = "wso2pass"
+driver = "org.postgresql.Driver"
+
+[database.config.pool_options]
+maxActive = 50
+maxWait = 60000
+minIdle = 5
+testOnBorrow = true
+validationQuery = "SELECT 1"
+validationInterval = 30000
+
 # Keystore Configuration
 [keystore.tls]
 file_name = "wso2carbon.jks"
