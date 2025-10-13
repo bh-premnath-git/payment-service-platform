@@ -43,3 +43,14 @@ services/
 │   └── database.py           # Database utilities
 │
 ├── payment-service/          # Handles payments
+-------------------------
+
+complete-setup.sh
+ ⭐ - Full automated setup (use this for new deployments)
+quick-fix.sh
+ - Fix for running systems (troubleshooting)
+Utilities: 3. 
+init-wso2-databases.sh
+ - APIM database initialization 4. 
+verify-databases.sh
+ - Database diagnostics
