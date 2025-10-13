@@ -1,5 +1,5 @@
 [server]
-hostname = "wso2apim"
+hostname = "localhost"
 base_path = "https://localhost:${carbon.management.port}"
 server_role = "default"
 

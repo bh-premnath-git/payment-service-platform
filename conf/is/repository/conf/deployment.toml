@@ -22,12 +22,13 @@ password = "wso2pass"
 driver = "org.postgresql.Driver"
 
 [database.identity_db.pool_options]
-maxActive = 50
+maxActive = 40
 maxWait = 60000
 minIdle = 5
 testOnBorrow = true
 validationQuery = "SELECT 1"
 validationInterval = 30000
+defaultAutoCommit = false
 
 # PostgreSQL Configuration for Shared Database
 [database.shared_db]
@@ -38,12 +39,13 @@ password = "wso2pass"
 driver = "org.postgresql.Driver"
 
 [database.shared_db.pool_options]
-maxActive = 50
+maxActive = 40
 maxWait = 60000
 minIdle = 5
 testOnBorrow = true
 validationQuery = "SELECT 1"
 validationInterval = 30000
+defaultAutoCommit = false
 
 # OAuth Configuration
 [oauth.token_validation]

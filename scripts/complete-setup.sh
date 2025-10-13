@@ -3,6 +3,14 @@ set -e
 
 echo "🚀 Complete WSO2 Setup with IDN_CONFIG_RESOURCE Fix"
 echo "=================================================="
+echo ""
+echo "ℹ️  This script:"
+echo "   1. Creates PostgreSQL databases"
+echo "   2. Manually runs SQL scripts (WSO2 -Dsetup causes PostgreSQL transaction errors)"
+echo "   3. Applies created_time trigger fix"
+echo "   4. Starts WSO2 IS and APIM"
+echo "   5. APIM auto-imports IS SSL certificate on startup (via docker-entrypoint-wrapper.sh)"
+echo ""
 
 # 1. Clean slate
 echo "🧹 Cleaning previous setup..."
@@ -22,25 +30,72 @@ done
 echo "✅ PostgreSQL ready"
 sleep 5
 
-# 3. Start WSO2 IS (first boot - creates tables)
-echo "🔐 Starting WSO2 Identity Server (initial boot)..."
-docker compose up -d wso2is
+# 3. Start WSO2 IS temporarily to extract SQL scripts
+echo "📊 Preparing WSO2 IS database tables..."
 
-# 4. Wait for table creation
-echo "⏳ Waiting for WSO2 IS to create tables..."
-ATTEMPTS=0
-MAX_ATTEMPTS=60
-until docker compose exec -T postgres psql -U postgres -d wso2is_db -t -c "SELECT 1 FROM information_schema.tables WHERE table_name = 'idn_config_resource';" 2>/dev/null | grep -q 1; do
-    ATTEMPTS=$((ATTEMPTS+1))
-    if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
-        echo "❌ Timeout waiting for tables"
+# Check if tables already exist
+SHARED_TABLES=$(docker compose exec -T postgres psql -U postgres -d wso2shared_db -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';" 2>/dev/null | tr -d ' ')
+
+if [ "$SHARED_TABLES" != "" ] && [ "$SHARED_TABLES" -gt 0 ]; then
+    echo "   ⏭️  Shared DB tables already exist ($SHARED_TABLES tables), skipping..."
+else
+    echo "   → Creating Shared DB tables (User Management & Registry)..."
+    # Start WSO2 IS container just to copy files, then stop it
+    docker compose up -d wso2is --no-deps
+    sleep 5
+    
+    # Copy SQL files from container
+    docker compose cp wso2is:/home/wso2carbon/wso2is-7.1.0/dbscripts/postgresql.sql /tmp/wso2-shared.sql
+    docker compose cp wso2is:/home/wso2carbon/wso2is-7.1.0/dbscripts/identity/postgresql.sql /tmp/wso2-identity.sql
+    
+    # Stop WSO2 IS
+    docker compose stop wso2is
+    
+    # Import shared DB tables
+    docker compose exec -T postgres psql -U wso2user -d wso2shared_db < /tmp/wso2-shared.sql > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "   ✅ Shared DB tables created"
+    else
+        rm -f /tmp/wso2-shared.sql /tmp/wso2-identity.sql
+        echo "   ❌ Failed to create shared DB tables"
         exit 1
     fi
-    echo "   Waiting for table creation... ($ATTEMPTS/$MAX_ATTEMPTS)"
-    sleep 3
-done
+fi
 
-echo "✅ Table idn_config_resource created"
+# Check if identity tables exist
+IS_TABLES=$(docker compose exec -T postgres psql -U postgres -d wso2is_db -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'idn_config_resource';" 2>/dev/null | tr -d ' ')
+
+if [ "$IS_TABLES" != "" ] && [ "$IS_TABLES" -gt 0 ]; then
+    echo "   ⏭️  Identity DB tables already exist, skipping..."
+else
+    echo "   → Creating Identity DB tables..."
+    # Import identity DB tables (file already copied above if needed)
+    if [ ! -f /tmp/wso2-identity.sql ]; then
+        docker compose up -d wso2is --no-deps
+        sleep 5
+        docker compose cp wso2is:/home/wso2carbon/wso2is-7.1.0/dbscripts/identity/postgresql.sql /tmp/wso2-identity.sql
+        docker compose stop wso2is
+    fi
+    
+    docker compose exec -T postgres psql -U wso2user -d wso2is_db < /tmp/wso2-identity.sql > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "   ✅ Identity DB tables created"
+    else
+        rm -f /tmp/wso2-shared.sql /tmp/wso2-identity.sql
+        echo "   ❌ Failed to create identity DB tables"
+        exit 1
+    fi
+fi
+
+# Cleanup temp SQL files
+rm -f /tmp/wso2-shared.sql /tmp/wso2-identity.sql
+
+echo "✅ All WSO2 IS tables created"
+sleep 2
+
+# 4. Start WSO2 IS now that tables exist
+echo "🔐 Starting WSO2 Identity Server..."
+docker compose up -d wso2is
 sleep 5
 
 # 5. Apply the fix IMMEDIATELY
@@ -113,15 +168,11 @@ else
     exit 1
 fi
 
-# 6. Restart WSO2 IS to clear any errors
-echo "🔄 Restarting WSO2 IS..."
-docker compose restart wso2is
-
-# 7. Wait for WSO2 IS to be fully ready
+# 6. Wait for WSO2 IS to be fully ready
 echo "⏳ Waiting for WSO2 IS to start..."
 sleep 60
 
-# 8. Start WSO2 APIM (needed to extract database scripts)
+# 7. Start WSO2 APIM (needed to extract database scripts)
 echo "🚀 Starting WSO2 APIM..."
 docker compose up -d wso2apim
 
@@ -129,7 +180,7 @@ docker compose up -d wso2apim
 echo "⏳ Waiting for WSO2 APIM to start..."
 sleep 30
 
-# 9. Initialize APIM databases
+# 8. Initialize APIM databases
 echo "📊 Initializing WSO2 APIM databases..."
 if [ -f "./scripts/init-wso2-databases.sh" ]; then
     ./scripts/init-wso2-databases.sh
@@ -137,11 +188,11 @@ else
     echo "⚠️  init-wso2-databases.sh not found, skipping"
 fi
 
-# 10. Start remaining services
+# 9. Start remaining services
 echo "🚀 Starting remaining services..."
 docker compose up -d
 
-# 11. Final verification
+# 10. Final verification
 echo ""
 echo "🔍 Final Verification..."
 echo "========================"

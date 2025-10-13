@@ -5,6 +5,8 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      POSTGRES_MAX_CONNECTIONS: 300
+    command: postgres -c max_connections=300 -c shared_buffers=256MB
     volumes:
       - ./conf/postgres/scripts:/docker-entrypoint-initdb.d
       - postgres-data:/var/lib/postgresql/data
@@ -26,7 +28,9 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      JAVA_OPTS: "-Xms512m -Xmx2048m -Dsetup"
+      # Note: -Dsetup removed - causes transaction errors with PostgreSQL
+      # Tables are created by complete-setup.sh script instead
+      JAVA_OPTS: "-Xms512m -Xmx2048m"
       LANG: "en_US.UTF-8"
       LC_ALL: "en_US.UTF-8"
       TZ: "GMT"
@@ -52,11 +56,14 @@ services:
         condition: service_healthy
       wso2is:
         condition: service_healthy
+    entrypoint: ["/docker-entrypoint-wrapper.sh"]
     environment:
-      JAVA_OPTS: "-Xms512m -Xmx2048m -Dsetup"
+      # Note: -Dsetup removed - tables created via init script
+      JAVA_OPTS: "-Xms512m -Xmx2048m"
     volumes:
       - ./conf/apim/repository/conf/deployment.toml:/home/wso2carbon/wso2am-4.5.0/repository/conf/deployment.toml
       - ./dockerfiles/apim/postgres-connector/postgresql-42.7.4.jar:/home/wso2carbon/wso2am-4.5.0/repository/components/lib/postgresql-42.7.4.jar:ro
+      - ./dockerfiles/apim/docker-entrypoint-wrapper.sh:/docker-entrypoint-wrapper.sh:ro
     ports:
       - "9444:9443"
       - "8280:8280"
