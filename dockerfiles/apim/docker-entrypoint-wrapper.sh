@@ -3,9 +3,10 @@ set -e
 
 echo "🔐 APIM Startup: Configuring SSL certificates..."
 
-TRUSTSTORE="/home/wso2carbon/wso2am-4.5.0/repository/resources/security/client-truststore.p12"
+CLIENT_TRUSTSTORE="/home/wso2carbon/wso2am-4.5.0/repository/resources/security/client-truststore.p12"
+INTERNAL_TRUSTSTORE="/home/wso2carbon/wso2am-4.5.0/repository/resources/security/truststore.p12"
 
-# Wait for WSO2 IS to be available and get certificate
+# Wait for WSO2 IS to be available
 echo "⏳ Waiting for WSO2 IS to be ready..."
 MAX_RETRIES=30
 RETRY_COUNT=0
@@ -22,37 +23,53 @@ done
 
 echo "✅ WSO2 IS is ready"
 
-# Check if certificate already exists
-if keytool -list -keystore "$TRUSTSTORE" -storepass wso2carbon -storetype PKCS12 -alias wso2is 2>/dev/null | grep -q "wso2is"; then
-    echo "✅ WSO2 IS certificate already exists in truststore"
-else
-    # Export certificate from WSO2 IS
-    echo "📤 Fetching WSO2 IS certificate..."
-    echo | openssl s_client -connect wso2is:9443 -servername wso2is 2>/dev/null | \
-        openssl x509 -outform PEM > /tmp/wso2is.crt
+# Function to import certificate into truststore
+import_cert() {
+    local truststore=$1
+    local alias=$2
     
-    if [ -s /tmp/wso2is.crt ]; then
-        # Import into APIM truststore
-        echo "📥 Importing certificate into APIM truststore..."
-        keytool -import -noprompt -alias wso2is \
-            -keystore "$TRUSTSTORE" \
-            -storetype PKCS12 \
-            -storepass wso2carbon \
-            -file /tmp/wso2is.crt
-        
-        echo "✅ Certificate imported successfully"
-        rm -f /tmp/wso2is.crt
-    else
-        echo "❌ Failed to fetch certificate from WSO2 IS"
-        exit 1
+    if keytool -list -keystore "$truststore" -storepass wso2carbon -storetype PKCS12 -alias "$alias" 2>/dev/null | grep -q "$alias"; then
+        echo "   ✅ Certificate already exists in $(basename $truststore)"
+        return 0
     fi
+    
+    echo "   📥 Importing into $(basename $truststore)..."
+    keytool -import -noprompt -alias "$alias" \
+        -keystore "$truststore" \
+        -storetype PKCS12 \
+        -storepass wso2carbon \
+        -file /tmp/wso2is.crt 2>&1 | grep -v "Warning" || true
+}
+
+# Export certificate from WSO2 IS
+echo "📤 Fetching WSO2 IS certificate..."
+echo | openssl s_client -connect wso2is:9443 2>/dev/null | \
+    sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /tmp/wso2is.crt
+
+if [ ! -s /tmp/wso2is.crt ]; then
+    echo "❌ Failed to fetch certificate from WSO2 IS"
+    exit 1
 fi
 
-# Verify certificate is present
-if keytool -list -keystore "$TRUSTSTORE" -storepass wso2carbon -storetype PKCS12 -alias wso2is 2>/dev/null | grep -q "trustedCertEntry"; then
-    echo "✅ Certificate verification successful"
+echo "📥 Importing certificate into APIM truststores..."
+import_cert "$CLIENT_TRUSTSTORE" "wso2is"
+import_cert "$INTERNAL_TRUSTSTORE" "wso2is"
+
+# Clean up
+rm -f /tmp/wso2is.crt
+
+# Verify
+echo "🔍 Verifying certificate imports..."
+if keytool -list -keystore "$CLIENT_TRUSTSTORE" -storepass wso2carbon -storetype PKCS12 -alias wso2is 2>/dev/null | grep -q "trustedCertEntry"; then
+    echo "   ✅ client-truststore.p12 verification successful"
 else
-    echo "⚠️  Warning: Certificate verification failed, but continuing..."
+    echo "   ⚠️  Warning: client-truststore.p12 verification failed"
+fi
+
+if keytool -list -keystore "$INTERNAL_TRUSTSTORE" -storepass wso2carbon -storetype PKCS12 -alias wso2is 2>/dev/null | grep -q "trustedCertEntry"; then
+    echo "   ✅ truststore.p12 verification successful"
+else
+    echo "   ⚠️  Warning: truststore.p12 verification failed"
 fi
 
 echo "🚀 Starting WSO2 API Manager..."
